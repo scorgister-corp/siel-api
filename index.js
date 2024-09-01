@@ -1,3 +1,3 @@
 const server = require('./server.js');
 
-server.start(2077);
+server.start(8100);
