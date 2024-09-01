@@ -1,0 +1,1290 @@
+{
+    "Saint-Gabriel": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Henri René": [
+        "GARE SAINT-ROCH",
+        "LA MARTELLE"
+    ],
+    "Juvignac": [
+        "JUVIGNAC",
+        "JULES GUESDE"
+    ],
+    "La Rauze": [
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Marie Caizergues": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Winston Churchill": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH"
+    ],
+    "Avenue de l'Agriculture": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Moulin de Gasconnet": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Saint-Jean de Védas Centre": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "ND DE SABLASSOU"
+    ],
+    "Pompignane": [
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Iris": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Parc Malbosc": [
+        "COUBERTIN"
+    ],
+    "Sophie Germain": [
+        "LA MARTELLE",
+        "TOURNEZY",
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Pergola": [
+        "JUVIGNAC",
+        "MOSSON",
+        "JULES GUESDE"
+    ],
+    "Moularès (Hôtel de Ville)": [
+        "MOSSON",
+        "ODYSSEUM",
+        "BOIRARGUES",
+        "OBSERVATOIRE",
+        "PEROLS ETANG",
+        "LATTES CENTRE"
+    ],
+    "Gare Saint-Roch - République": [
+        "BOIRARGUES",
+        "OBSERVATOIRE",
+        "PEROLS ETANG",
+        "LATTES CENTRE"
+    ],
+    "Carriéra": [
+        "H. DEPARTEMENT",
+        "COUBERTIN"
+    ],
+    "Route de Ganges": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "Antennes": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "École d'Architecture": [
+        "NAVETTE A",
+        "NAVETTE B"
+    ],
+    "Tonnelles": [
+        "SABINES",
+        "ODYSSEUM",
+        "AIGUELONGUE",
+        "CELLENEUVE",
+        "JUVIGNAC",
+        "MOSSON",
+        "JULES GUESDE"
+    ],
+    "Louis Ravaz": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS",
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Pléiade": [
+        "DORIA TERMINUS",
+        "H. DEPARTEMENT"
+    ],
+    "Rives du Lez": [
+        "MOSSON",
+        "ODYSSEUM",
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Jacques Prévert": [
+        "H. DEPARTEMENT",
+        "COUBERTIN"
+    ],
+    "Antigone": [
+        "MOSSON",
+        "ODYSSEUM",
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Notre-Dame de Sablassou": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU"
+    ],
+    "Pastourelles": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Portalière des Masques": [
+        "DORIA TERMINUS"
+    ],
+    "Comté de Nice": [
+        "H. DEPARTEMENT",
+        "COUBERTIN"
+    ],
+    "Henri Dunant": [
+        "SABINES",
+        "ODYSSEUM",
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Gustave Eiffel": [
+        "LA MARTELLE"
+    ],
+    "Parc de la Lironde": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Plan des 4 Seigneurs": [
+        "NAVETTE A",
+        "NAVETTE B"
+    ],
+    "La Gaillarde": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "Paladilhe": [
+        "DORIA TERMINUS",
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Lagoya": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Major Flandre": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Bugarel": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH",
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Demeter": [
+        "SABINES",
+        "SAINT-CLEOPHAS"
+    ],
+    "Jean Mirailhet": [
+        "CENTRAYRARGUES",
+        "GARE SAINT-ROCH"
+    ],
+    "Sainte-Geneviève": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "Espérance": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Centurions": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU"
+    ],
+    "Ronceray": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH"
+    ],
+    "Mûriers": [
+        "H. DEPARTEMENT"
+    ],
+    "Campus Agropolis": [
+        "NAVETTE A",
+        "NAVETTE B",
+        "CAMPUS AGROPOLIS"
+    ],
+    "Gémeaux": [
+        "H. DEPARTEMENT",
+        "COUBERTIN"
+    ],
+    "Mondial 98": [
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Château d'Ô": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS",
+        "H. DEPARTEMENT",
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Agropolis": [
+        "NAVETTE B"
+    ],
+    "Pablo Picasso": [
+        "BOIRARGUES",
+        "OBSERVATOIRE",
+        "PEROLS ETANG",
+        "LATTES CENTRE"
+    ],
+    "Avenue de Toulouse": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH"
+    ],
+    "Centrayrargues": [
+        "CENTRAYRARGUES",
+        "GARE SAINT-ROCH"
+    ],
+    "Lattes Centre": [
+        "OBSERVATOIRE",
+        "LATTES CENTRE",
+        "BOIRARGUES"
+    ],
+    "Mas de Merle": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Font Trouvé": [
+        "DORIA TERMINUS",
+        "H. DEPARTEMENT"
+    ],
+    "Rièges": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Place d'Italie": [
+        "H. DEPARTEMENT",
+        "COUBERTIN"
+    ],
+    "Maison des Sports": [
+        "DORIA TERMINUS",
+        "H. DEPARTEMENT"
+    ],
+    "Saint-Priest": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "Grammont": [
+        "ODYSSEUM",
+        "GRAMMONT"
+    ],
+    "Pic Saint-Loup": [
+        "NAVETTE A",
+        "NAVETTE B"
+    ],
+    "Jean Calvin": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Frédéric Bazille": [
+        "CENTRAYRARGUES",
+        "TOURNEZY"
+    ],
+    "Le Grand M": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH",
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Villeneuve - d'Angoulême": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU"
+    ],
+    "Tournezy": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Charles de Gaulle": [
+        "SABINES",
+        "ODYSSEUM",
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "ND DE SABLASSOU"
+    ],
+    "La Source": [
+        "DORIA TERMINUS",
+        "H. DEPARTEMENT"
+    ],
+    "Aiguelongue (Jussieu)": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Gardioles": [
+        "DORIA TERMINUS",
+        "H. DEPARTEMENT"
+    ],
+    "Salaison": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Du Guesclin": [
+        "MOSSON",
+        "ODYSSEUM",
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Parc Expo": [
+        "PEROLS ETANG",
+        "OBSERVATOIRE"
+    ],
+    "Vincent Auriol": [
+        "NAVETTE B"
+    ],
+    "Saint-Clément": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Mourèze": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "P.Guerre": [
+        "SABINES",
+        "SAINT-CLEOPHAS"
+    ],
+    "Aube Rouge": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES"
+    ],
+    "Hippolyte Rech": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Mas Drevon": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU"
+    ],
+    "Las Rébès": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "Lycée Frédéric Bazille": [
+        "NAVETTE A",
+        "NAVETTE B"
+    ],
+    "Jacou": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES"
+    ],
+    "Nouveau Saint-Roch": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU",
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Occitanie": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS",
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Alexandre Yersin": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Maurice Chauvet": [
+        "NAVETTE A",
+        "NAVETTE B"
+    ],
+    "Hélios": [
+        "CENTRAYRARGUES"
+    ],
+    "Las Sorbes": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Lavalette": [
+        "NAVETTE A",
+        "NAVETTE B",
+        "CAMPUS AGROPOLIS"
+    ],
+    "Étienne Méhul": [
+        "SABINES",
+        "SAINT-CLEOPHAS"
+    ],
+    "Lavandin": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH"
+    ],
+    "Comté de Toulouse": [
+        "H. DEPARTEMENT",
+        "COUBERTIN"
+    ],
+    "Irissou": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH"
+    ],
+    "Restanque": [
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Antoine-Laurent de Jussieu": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Georges Danton": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH"
+    ],
+    "Cinsaults": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Nazareth": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Place Albert 1er - Saint-Charles": [
+        "MOSSON",
+        "ODYSSEUM",
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Sainte-Odile": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Vert-Bois": [
+        "NAVETTE A",
+        "NAVETTE B",
+        "CAMPUS AGROPOLIS"
+    ],
+    "Mosson": [
+        "MOSSON",
+        "ODYSSEUM",
+        "JUVIGNAC",
+        "JULES GUESDE"
+    ],
+    "Cité Mion": [
+        "GARE SAINT-ROCH",
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Via Domitia": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES"
+    ],
+    "Cévennes": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "Maréchal Leclerc": [
+        "CENTRAYRARGUES",
+        "GARE SAINT-ROCH"
+    ],
+    "Jules Guesde": [
+        "JUVIGNAC",
+        "MOSSON",
+        "JULES GUESDE",
+        "GARE SAINT-ROCH"
+    ],
+    "Ambroise Paré": [
+        "EUROMEDECINE"
+    ],
+    "Las Cazes": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "La Galine": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU"
+    ],
+    "Léon Blum": [
+        "MOSSON",
+        "ODYSSEUM",
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Mas Saint-Pierre": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Apothicaires": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "Maurice Chevalier": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Jeu de Mail des Abbés": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU"
+    ],
+    "Hôpital Lapeyronie": [
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Pierre Cardenal": [
+        "H. DEPARTEMENT",
+        "COUBERTIN"
+    ],
+    "Malbosc - Domaine d'O": [
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Vauguières": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Collège Marcel Pagnol": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Georges Pompidou": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES"
+    ],
+    "Saporta": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Claret": [
+        "LES BOUISSES",
+        "LA MARTELLE",
+        "TOURNEZY",
+        "GARE SAINT-ROCH",
+        "JULES GUESDE"
+    ],
+    "Ettore Bugatti": [
+        "SABINES",
+        "SAINT-CLEOPHAS"
+    ],
+    "Pilory": [
+        "JUVIGNAC",
+        "MOSSON",
+        "JULES GUESDE"
+    ],
+    "René Bougnol": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Martellière": [
+        "LA MARTELLE",
+        "TOURNEZY",
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Place de France": [
+        "SABINES",
+        "GRAMMONT",
+        "MOSSON",
+        "ODYSSEUM",
+        "GARE SUD DE FRANCE",
+        "PLACE DE FRANCE"
+    ],
+    "Lycée Jean Monnet": [
+        "DORIA TERMINUS",
+        "H. DEPARTEMENT"
+    ],
+    "Georges Brassens": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH"
+    ],
+    "Paul Parguel": [
+        "NAVETTE A",
+        "NAVETTE B",
+        "CAMPUS AGROPOLIS"
+    ],
+    "Cimetière Saint-Étienne": [
+        "ODYSSEUM",
+        "GRAMMONT"
+    ],
+    "Petit Bard": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Cervantès": [
+        "DORIA TERMINUS",
+        "H. DEPARTEMENT"
+    ],
+    "Place de l'Europe": [
+        "MOSSON",
+        "ODYSSEUM",
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Hts La Lironde": [
+        "OBSERVATOIRE",
+        "LATTES CENTRE"
+    ],
+    "Sainte-Catherine": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Razeteurs": [
+        "GARE SAINT-ROCH"
+    ],
+    "Pous de la Sers": [
+        "DORIA TERMINUS",
+        "H. DEPARTEMENT"
+    ],
+    "Charles Flahault": [
+        "CELLENEUVE"
+    ],
+    "Pérols Étang de l'Or": [
+        "PEROLS ETANG",
+        "OBSERVATOIRE"
+    ],
+    "Chambéry": [
+        "CENTRAYRARGUES",
+        "GARE SAINT-ROCH"
+    ],
+    "Voie Domitienne": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Frédéric Fabrège": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Raymond Recouly": [
+        "SABINES",
+        "SAINT-CLEOPHAS"
+    ],
+    "Saint-Martin": [
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Hôtel du Département": [
+        "DORIA TERMINUS",
+        "H. DEPARTEMENT",
+        "COUBERTIN",
+        "JUVIGNAC",
+        "MOSSON",
+        "JULES GUESDE"
+    ],
+    "Zénith": [
+        "ODYSSEUM",
+        "GRAMMONT"
+    ],
+    "Pierre Laroque": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Uppsala": [
+        "COUBERTIN"
+    ],
+    "Hortus": [
+        "NAVETTE A",
+        "NAVETTE B"
+    ],
+    "Louvain": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Pierre d'Adhémar": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Guillaume Janvier": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH"
+    ],
+    "Place Carnot": [
+        "GARE SAINT-ROCH",
+        "LA MARTELLE",
+        "BOIRARGUES",
+        "OBSERVATOIRE",
+        "PEROLS ETANG",
+        "LATTES CENTRE"
+    ],
+    "La Pile": [
+        "AIGUELONGUE",
+        "H. DEPARTEMENT"
+    ],
+    "Clolus": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Boutonnet - Cité des Arts": [
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Halles de la Paillade": [
+        "H. DEPARTEMENT",
+        "COUBERTIN",
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Vivaldi": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH"
+    ],
+    "Liberté Gayraud": [
+        "GARE SAINT-ROCH",
+        "JULES GUESDE"
+    ],
+    "Cité Roger": [
+        "DORIA TERMINUS",
+        "H. DEPARTEMENT"
+    ],
+    "Puccini": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH"
+    ],
+    "Mas de Bellevue": [
+        "H. DEPARTEMENT",
+        "COUBERTIN"
+    ],
+    "George Onslow": [
+        "SABINES",
+        "SAINT-CLEOPHAS"
+    ],
+    "Jean Bart": [
+        "DORIA TERMINUS"
+    ],
+    "Croix du Capitaine": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Chantecler": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Sainte-Thérèse": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "EcoPôle": [
+        "PEROLS ETANG",
+        "OBSERVATOIRE"
+    ],
+    "Euromédecine": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS",
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Glycines": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Croix des Rosiers": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Goélands": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Pierre Viala": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "Semard": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "La Condamine": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "ND DE SABLASSOU"
+    ],
+    "Eugène Bataillon": [
+        "NAVETTE A",
+        "NAVETTE B",
+        "CAMPUS AGROPOLIS"
+    ],
+    "TaM": [
+        "SABINES",
+        "SAINT-CLEOPHAS"
+    ],
+    "Val d'Aurelle": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "Celleneuve": [
+        "AIGUELONGUE",
+        "CELLENEUVE",
+        "JUVIGNAC",
+        "MOSSON",
+        "JULES GUESDE"
+    ],
+    "Victoire 2": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "ND DE SABLASSOU"
+    ],
+    "Saint-Paul": [
+        "H. DEPARTEMENT",
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Belvédère": [
+        "SABINES",
+        "ODYSSEUM",
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Georges Frêche - Hôtel de Ville": [
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Figairasse": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Passerines": [
+        "SABINES",
+        "SAINT-CLEOPHAS"
+    ],
+    "Cité de l'Arme": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Universités Sciences et Lettres": [
+        "NAVETTE A",
+        "NAVETTE B",
+        "CAMPUS AGROPOLIS",
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Henri Marès": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "La Pompignane (Les Lacs)": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Louis Blanc- Agora de la Danse": [
+        "MOSSON",
+        "ODYSSEUM",
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Collège Camille Claudel": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "Bengalis": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Les Grisettes": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "ND DE SABLASSOU"
+    ],
+    "Renaudel": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Beaux-Arts": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU"
+    ],
+    "Hauts de Massane": [
+        "H. DEPARTEMENT",
+        "COUBERTIN",
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Sabines": [
+        "SABINES",
+        "ODYSSEUM",
+        "SAINT-CLEOPHAS",
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "ND DE SABLASSOU"
+    ],
+    "Étoile": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Rives du Lez - Consuls de Mer": [
+        "BOIRARGUES",
+        "OBSERVATOIRE",
+        "PEROLS ETANG",
+        "LATTES CENTRE"
+    ],
+    "Doria": [
+        "EUROMEDECINE",
+        "AIGUELONGUE",
+        "DORIA TERMINUS",
+        "H. DEPARTEMENT"
+    ],
+    "Craponne": [
+        "JULES GUESDE"
+    ],
+    "François Dezeuze": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Grèzes": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Fac de Pharmacie": [
+        "SABINES",
+        "ODYSSEUM",
+        "AIGUELONGUE"
+    ],
+    "Croix d'Argent": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU"
+    ],
+    "Saint-Roch": [
+        "AIGUELONGUE"
+    ],
+    "Lemasson": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU"
+    ],
+    "Corum": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU",
+        "MOSSON",
+        "ODYSSEUM",
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "École de Chimie": [
+        "NAVETTE A",
+        "NAVETTE B",
+        "CAMPUS AGROPOLIS"
+    ],
+    "Plankstadt": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES"
+    ],
+    "Millénaire": [
+        "SABINES",
+        "ODYSSEUM",
+        "MOSSON"
+    ],
+    "Pas du Loup": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH"
+    ],
+    "Saint-Éloi": [
+        "SABINES",
+        "ODYSSEUM",
+        "AIGUELONGUE",
+        "CELLENEUVE",
+        "MOSSON"
+    ],
+    "Aiguelongue": [
+        "SABINES",
+        "ODYSSEUM",
+        "AIGUELONGUE",
+        "CELLENEUVE",
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "ND DE SABLASSOU"
+    ],
+    "Georges Méliès": [
+        "ODYSSEUM",
+        "GRAMMONT"
+    ],
+    "Voltaire": [
+        "BOIRARGUES",
+        "OBSERVATOIRE",
+        "PEROLS ETANG",
+        "LATTES CENTRE"
+    ],
+    "Tourterelles": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Descartes": [
+        "GARE SAINT-ROCH"
+    ],
+    "Rondelet": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH",
+        "LA MARTELLE",
+        "TOURNEZY",
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU",
+        "ALBERT 1er ST CH",
+        "LEON BLUM",
+        "JULES GUESDE"
+    ],
+    "Saint-Lazare": [
+        "SABINES",
+        "ODYSSEUM",
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "ND DE SABLASSOU"
+    ],
+    "Port Marianne": [
+        "MOSSON",
+        "ODYSSEUM",
+        "BOIRARGUES",
+        "OBSERVATOIRE",
+        "PEROLS ETANG",
+        "LATTES CENTRE"
+    ],
+    "Collège des Aiguerelles": [
+        "CENTRAYRARGUES",
+        "GARE SAINT-ROCH"
+    ],
+    "Mas Argelliers": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Gouara": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Lycée Léonard de Vinci": [
+        "H. DEPARTEMENT",
+        "COUBERTIN"
+    ],
+    "Zoo": [
+        "NAVETTE A",
+        "NAVETTE B",
+        "CAMPUS AGROPOLIS"
+    ],
+    "Les Bouisses": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH",
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Puech Villa": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "Pioch de Boutonnet": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Cougourlude": [
+        "OBSERVATOIRE",
+        "LATTES CENTRE",
+        "BOIRARGUES"
+    ],
+    "Appel du 18 Juin": [
+        "DORIA TERMINUS"
+    ],
+    "Marie Curie": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Castelle": [
+        "SABINES",
+        "SAINT-CLEOPHAS"
+    ],
+    "Odysseum": [
+        "ODYSSEUM",
+        "MOSSON"
+    ],
+    "Lycée Jules Ferry": [
+        "LA MARTELLE",
+        "TOURNEZY",
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Stade Philippidès": [
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Pinville": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Gascogne": [
+        "NAVETTE A",
+        "NAVETTE B",
+        "CAMPUS AGROPOLIS"
+    ],
+    "Ormeaux": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Pierre de Coubertin": [
+        "H. DEPARTEMENT",
+        "COUBERTIN"
+    ],
+    "Comédie": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU",
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Les Pins": [
+        "SABINES",
+        "SAINT-CLEOPHAS"
+    ],
+    "Barbusse": [
+        "GARE SAINT-ROCH"
+    ],
+    "Saint-Cléophas": [
+        "SABINES",
+        "SAINT-CLEOPHAS",
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "ND DE SABLASSOU"
+    ],
+    "Roqueturière": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Alpilles": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Observatoire": [
+        "BOIRARGUES",
+        "OBSERVATOIRE",
+        "PEROLS ETANG",
+        "LATTES CENTRE"
+    ],
+    "Paul Fajon": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH",
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "La Martelle": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Boirargues": [
+        "BOIRARGUES",
+        "OBSERVATOIRE",
+        "PEROLS ETANG",
+        "LATTES CENTRE"
+    ],
+    "Place du 8 Mai": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH"
+    ],
+    "Lucullus": [
+        "LA MARTELLE",
+        "TOURNEZY"
+    ],
+    "Corse": [
+        "H. DEPARTEMENT",
+        "COUBERTIN"
+    ],
+    "Garcia Lorca": [
+        "CENTRAYRARGUES",
+        "GARE SAINT-ROCH",
+        "LA MARTELLE",
+        "TOURNEZY",
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Pierre Rouge": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Oxford": [
+        "H. DEPARTEMENT",
+        "COUBERTIN"
+    ],
+    "Mas de Bagnères": [
+        "SABINES",
+        "ODYSSEUM"
+    ],
+    "Gare Saint-Roch": [
+        "CENTRAYRARGUES",
+        "TOURNEZY",
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU",
+        "MOSSON",
+        "ODYSSEUM",
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Érables": [
+        "AIGUELONGUE",
+        "CELLENEUVE"
+    ],
+    "Saint-Jean le Sec": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "ND DE SABLASSOU"
+    ],
+    "Alco": [
+        "EUROMEDECINE",
+        "DORIA TERMINUS"
+    ],
+    "Pérols Centre": [
+        "PEROLS ETANG",
+        "OBSERVATOIRE"
+    ],
+    "Gare Montpellier Sud de France": [
+        "GARE SUD DE FRANCE",
+        "PLACE DE FRANCE"
+    ],
+    "Les Aubes": [
+        "ALBERT 1er ST CH",
+        "LEON BLUM"
+    ],
+    "Gare Saint-Roch (Pont de Sète)": [
+        "GARE SAINT-ROCH",
+        "LES BOUISSES",
+        "LA MARTELLE",
+        "JULES GUESDE"
+    ],
+    "Ernest Michel": [
+        "LES BOUISSES",
+        "GARE SAINT-ROCH",
+        "LA MARTELLE",
+        "TOURNEZY",
+        "JULES GUESDE"
+    ],
+    "Stade de la Mosson": [
+        "MOSSON",
+        "ODYSSEUM"
+    ],
+    "Raimbaud d'Orange": [
+        "H. DEPARTEMENT",
+        "COUBERTIN"
+    ],
+    "Clairval": [
+        "JACOU",
+        "ST-JEAN DE VEDAS",
+        "SABINES",
+        "ND DE SABLASSOU"
+    ],
+    "Soleiado": [
+        "CENTRAYRARGUES",
+        "GARE SAINT-ROCH"
+    ]
+}
