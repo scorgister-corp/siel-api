@@ -24,12 +24,12 @@ handlers.get("/stops", (req, res) => {
 
 
 handlers.post("/data", async (req, res) => {
-    if(req.body["stop_name"] == undefined || req.body["direction"] == undefined) {
+    if(req.body["stop_name"] == undefined || req.body["direction"] == undefined || req.body["line"] == undefined) {
         send400(res);
         return;
     }
 
-    var data = await  utils.getData(req.body["stop_name"], req.body["direction"]);
+    var data = await  utils.getData(req.body["stop_name"], req.body["direction"], req.body["line"]);
     send(res, data);
 });
 
@@ -40,6 +40,15 @@ handlers.post("/directions", async (req, res) => {
     }
 
     send(res, utils.getDirections(req.body["stop_name"]));
+});
+
+handlers.post("/lines", async (req, res) => {
+    if(req.body["stop_name"] == undefined) {
+        send400(res);
+        return;
+    }
+
+    send(res, utils.getLines(req.body["stop_name"]));
 });
 
 // send 404

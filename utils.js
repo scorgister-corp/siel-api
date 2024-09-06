@@ -18,7 +18,19 @@ function getTripHeadsign(stopName) {
 }
 
 function getDirections(stopName) {
-		return DIRECTIONS[stopName];
+	var stop = DIRECTIONS[stopName];
+	if(stop == null || stop == undefined)
+		return null;
+	
+	return stop["directions"];
+}
+
+function getLines(stopName) {
+	var stop = DIRECTIONS[stopName];
+	if(stop == null || stop == undefined)
+		return null;
+	
+	return stop["lines"];
 }
 
 function getAllStops() {
@@ -64,8 +76,16 @@ function searchStopAndDirection(stopName, direction) {
 	return results;
 }
 
-async function findData(direction) {
-	if (direction === undefined || direction.length === 0 || direction === null) return null;
+async function findData(direction, line) {
+	if(direction === undefined || direction.length === 0 || direction === null) {
+		console.error("Error [0]");
+		return null;
+	}
+
+	if(line === undefined || line.length === 0 || line === null) {
+		console.error("Error [1]");
+		return null;
+	}
 	var response = null;
 	try {
 		response = await fetch(
@@ -78,6 +98,7 @@ async function findData(direction) {
 			},
 		);
 	}catch(e) {
+		console.error("Error [2]");
 		return null;
 	}
 	if (!response.ok) {
@@ -89,30 +110,33 @@ async function findData(direction) {
 		
 	const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(buffer));
 	const data = [];
-	feed.entity.forEach(entity => {		
+	
+	feed.entity.forEach(entity => {				
 		if(entity.tripUpdate) {
-			for(var i = 0; i < direction.length; i++) {
-				if(entity.tripUpdate.trip.routeId === direction[i].route_id) {
-					if(entity.tripUpdate.stopTimeUpdate) {
-						entity.tripUpdate.stopTimeUpdate.forEach(stop => {
-							if(direction[i].stop_id === stop.stopId) {
-								if(stop.arrival && stop.arrival.time) {
-									if(typeof stop.arrival.time.low === 'number' && stop.arrival.time > Date.now() / 1000) {
-										if(entity.tripUpdate && entity.tripUpdate.trip) {
-											const trip = showTrip(entity.tripUpdate.trip);
-											if(trip === direction[i].trip_headsign) {
-												data.push({
-													trip_headsign: trip,
-													departure_time: timestampToTime(stop.arrival),
-													route_short_name: direction[i].route_id.split('-')[1],
-													stop_name: direction[i].stop_name
-												});
+			for(var i = 0; i < direction.length; i++) {				
+				for(var j = 0; j < line.length; j++) {					
+					if(entity.tripUpdate.trip.routeId === direction[i].route_id && direction[i].route_id.endsWith("-" + line[j])) {
+						if(entity.tripUpdate.stopTimeUpdate) {
+							entity.tripUpdate.stopTimeUpdate.forEach(stop => {
+								if(direction[i].stop_id === stop.stopId) {								
+									if(stop.arrival && stop.arrival.time) {
+										if(typeof stop.arrival.time.low === 'number' && stop.arrival.time > Date.now() / 1000) {
+											if(entity.tripUpdate && entity.tripUpdate.trip) {
+												const trip = showTrip(entity.tripUpdate.trip);
+												if(trip === direction[i].trip_headsign) {
+													data.push({
+														trip_headsign: trip,
+														departure_time: stop.arrival.time.toString(),
+														route_short_name: direction[i].route_id.split('-')[1],
+														stop_name: direction[i].stop_name
+													});
+												}
 											}
 										}
 									}
 								}
-							}
-						});
+							});
+						}
 					}
 				}
 			}
@@ -120,6 +144,7 @@ async function findData(direction) {
 	});
 	
 	data.sort((a, b) => a.departure_time.localeCompare(b.departure_time));
+	
 	return data;
 }
 
@@ -127,14 +152,14 @@ function toPascalCase(str) {
 	return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
 }
 
-async function getData(stopName, direction) {
+async function getData(stopName, direction, line) {
 	let obj = await searchStopAndDirection(stopName, direction);
 	if (obj.length === 0) {
 		const new_stopName = toPascalCase(stopName);
 		obj = await searchStopAndDirection(new_stopName, direction);
 	}
-	
-	return await findData(obj);
+
+	return await findData(obj, line);
 }
 
 module.exports = {
@@ -146,5 +171,6 @@ module.exports = {
 	findData,
 	toPascalCase,
 	getData,
-	getDirections
+	getDirections,
+	getLines
 };
