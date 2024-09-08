@@ -128,7 +128,8 @@ async function findData(direction, line) {
 														trip_headsign: trip,
 														departure_time: stop.arrival.time.toString(),
 														route_short_name: direction[i].route_id.split('-')[1],
-														stop_name: direction[i].stop_name
+														stop_name: direction[i].stop_name,
+														vehicle_id: (entity.tripUpdate.vehicle!=null?entity.tripUpdate.vehicle.id:null)
 													});
 												}
 											}
