@@ -129,7 +129,8 @@ async function findData(direction, line) {
 														departure_time: stop.arrival.time.toString(),
 														route_short_name: direction[i].route_id.split('-')[1],
 														stop_name: direction[i].stop_name,
-														vehicle_id: (entity.tripUpdate.vehicle!=null?entity.tripUpdate.vehicle.id:null)
+														vehicle_id: (entity.tripUpdate.vehicle!=null?entity.tripUpdate.vehicle.id:null),
+														trip_id: entity.tripUpdate.trip.tripId
 													});
 												}
 											}
