@@ -33,6 +33,16 @@ handlers.post("/data", async (req, res) => {
     send(res, data);
 });
 
+handlers.post("/alert", async (req, res) => {
+    if(req.body["line"] == undefined) {
+        send400(res);
+        return;
+    }
+
+    var data = await utils.getAlert(req.body["line"]);
+    send(res, data);
+});
+
 handlers.post("/directions", async (req, res) => {
     if(req.body["stop_name"] == undefined) {
         send400(res);

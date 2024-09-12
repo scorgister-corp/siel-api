@@ -76,6 +76,63 @@ function searchStopAndDirection(stopName, direction) {
 	return results;
 }
 
+async function getAlert(line) {	
+	if(line === undefined || line.length === 0 || line === null) {
+		console.error("Error [-1]");
+		return null;
+	}
+
+	var response = null;
+	try {
+		response = await fetch(
+			'https://data.montpellier3m.fr/TAM_MMM_GTFSRT/Alert.pb',
+			{
+				mode: 'cors',
+				headers: {
+					'Access-Control-Allow-Origin': '*',
+				},
+			},
+		);
+	}catch(e) {
+		console.error("Error [4]");
+		return null;
+	}
+	
+	if (!response.ok) {
+		const error = new Error(`${response.url}: ${response.status} ${response.statusText}`);
+		error.response = response;
+		throw error;
+	}
+	const buffer = await response.arrayBuffer();
+		
+	const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(buffer));
+
+	var data = [];
+	feed.entity.forEach((elt) => {
+		if(elt.alert.informedEntity) {
+			for(var i = 0; i < line.length; i++) {
+				elt.alert.informedEntity.forEach(element => {
+					if(element.routeId.endsWith("-" + line[i])) {
+						elt.alert.descriptionText.translation.forEach(e => {
+							if(e.language == "fr") {
+								data.push({
+									routeId: line[i],
+									text: e.text
+								});
+								
+							}
+						});
+					}
+					
+				});
+			}
+		}
+	});
+	
+	return data;
+	
+}
+
 async function findData(direction, line) {
 	if(direction === undefined || direction.length === 0 || direction === null) {
 		console.error("Error [0]");
@@ -173,6 +230,7 @@ module.exports = {
 	findData,
 	toPascalCase,
 	getData,
+	getAlert,
 	getDirections,
 	getLines
 };
