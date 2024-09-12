@@ -101,7 +101,8 @@ async function getAlert(line) {
 	if (!response.ok) {
 		const error = new Error(`${response.url}: ${response.status} ${response.statusText}`);
 		error.response = response;
-		throw error;
+		console.log(error);
+		return [];
 	}
 	const buffer = await response.arrayBuffer();
 		
