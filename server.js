@@ -40,6 +40,7 @@ handlers.post("/alert", async (req, res) => {
     }
 
     var data = await utils.getAlert(req.body["line"]);
+        
     send(res, data);
 });
 

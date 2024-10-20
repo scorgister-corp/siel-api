@@ -97,7 +97,7 @@ async function getAlert(line) {
 		console.error("Error [4]");
 		return null;
 	}
-	
+
 	if (!response.ok) {
 		const error = new Error(`${response.url}: ${response.status} ${response.statusText}`);
 		error.response = response;
@@ -107,7 +107,7 @@ async function getAlert(line) {
 	const buffer = await response.arrayBuffer();
 		
 	const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(buffer));
-
+	
 	var data = [];
 	feed.entity.forEach((elt) => {
 		if(elt.alert.informedEntity) {
