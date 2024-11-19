@@ -7,12 +7,18 @@ const VERSION = "1.0.0"
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded())
 const handlers = handler(app, defaultMethodNotAllowedHandler);
 
 app.options("*", (req, res) => {
     send(res, {});
 });
 
+
+handlers.get("/trip", async (req, res) => {    
+    var data = await  utils.getTripData(req.query["tripid"]);
+    send(res, data);
+});
 
 handlers.get("/version", (req, res) => {
     send(res, {version: VERSION});

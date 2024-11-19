@@ -76,6 +76,17 @@ function searchStopAndDirection(stopName, direction) {
 	return results;
 }
 
+function getStopName(stopId) {
+	var results = "";
+	for(var i = 0; i < all_data.length; i++) 
+		if(all_data[i].stop_id == stopId){
+			results = all_data[i].stop_name;
+			break
+		}
+
+	return results
+}
+
 async function getAlert(line) {	
 	if(line === undefined || line.length === 0 || line === null) {
 		console.error("Error [-1]");
@@ -159,6 +170,7 @@ async function findData(direction, line) {
 		console.error("Error [2]");
 		return null;
 	}
+	
 	if (!response.ok) {
 		const error = new Error(`${response.url}: ${response.status} ${response.statusText}`);
 		error.response = response;
@@ -208,6 +220,69 @@ async function findData(direction, line) {
 	return data;
 }
 
+
+async function getTripData(tripId) {
+	if(tripId === undefined || tripId == "") {
+		console.error("Error [3]");
+		return null;
+	}
+
+	var response = null;
+	try {
+		response = await fetch(
+			'https://data.montpellier3m.fr/TAM_MMM_GTFSRT/TripUpdate.pb',
+			{
+				mode: 'cors',
+				headers: {
+					'Access-Control-Allow-Origin': '*',
+				},
+			},
+		);
+	}catch(e) {
+		console.error("Error [2.1]");
+		return null;
+	}
+	
+	if (!response.ok) {
+		const error = new Error(`${response.url}: ${response.status} ${response.statusText}`);
+		error.response = response;
+		throw error;
+	}
+	const buffer = await response.arrayBuffer();
+		
+	const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(buffer));
+	const data = [];
+	
+	feed.entity.forEach(entity => {				
+		if(entity.tripUpdate && entity.tripUpdate.trip.tripId == tripId) {
+			entity.tripUpdate.stopTimeUpdate.forEach(elt => {
+				var stopName = getStopName(elt.stopId);
+				if(stopName != "") {
+					var t = elt.departure.time - (Date.now() / 1000);
+					var stationState = -1;
+					if(t > -35 && t < 10)
+						stationState = 0;
+					else if(t > 10)
+						stationState = 1;
+
+					data.push({
+						departure_time: elt.departure.time.toString(),
+						station_name: stopName,
+						state: stationState,
+						vehicle_id: (entity.tripUpdate.vehicle!=null?entity.tripUpdate.vehicle.id:null),
+						trip_id: entity.tripUpdate.trip.tripId,
+						route_short_name: entity.tripUpdate.trip.routeId.split('-')[1],
+					})
+				}
+			});
+		}
+	});
+	
+	data.sort((a, b) => a.departure_time.localeCompare(b.departure_time));
+	
+	return data;
+}
+
 function toPascalCase(str) {
 	return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
 }
@@ -229,6 +304,7 @@ module.exports = {
 	showTrip,
 	searchStopAndDirection,
 	findData,
+	getTripData,
 	toPascalCase,
 	getData,
 	getAlert,
