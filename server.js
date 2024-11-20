@@ -1,6 +1,7 @@
 const express = require('express');
 const handler = require('./handler')
 const utils = require('./utils.js');
+const fs = require('fs');
 
 const VERSION = "1.0.0"
 
@@ -14,6 +15,21 @@ app.options("*", (req, res) => {
     send(res, {});
 });
 
+
+handlers.post("/analyse", (req, res) => {   
+    var currentData = []; 
+    if(fs.existsSync("./datas.json")) {
+        currentData = JSON.parse(fs.readFileSync("./datas.json"));
+    }
+
+    for(var i = 0; i < req.body.length; i++)
+        currentData.push(req.body[i]);
+    
+    fs.writeFileSync("./datas.json", JSON.stringify(currentData));
+    
+
+    send(res, {});
+});
 
 handlers.get("/trip", async (req, res) => {    
     var data = await  utils.getTripData(req.query["tripid"]);

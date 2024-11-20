@@ -180,14 +180,13 @@ async function findData(direction, line) {
 		
 	const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(buffer));
 	const data = [];
-	
-	feed.entity.forEach(entity => {				
+	feed.entity.forEach(entity => {			
 		if(entity.tripUpdate) {
 			for(var i = 0; i < direction.length; i++) {				
 				for(var j = 0; j < line.length; j++) {					
 					if(entity.tripUpdate.trip.routeId === direction[i].route_id && direction[i].route_id.endsWith("-" + line[j])) {
 						if(entity.tripUpdate.stopTimeUpdate) {
-							entity.tripUpdate.stopTimeUpdate.forEach(stop => {
+							entity.tripUpdate.stopTimeUpdate.forEach(stop => {								
 								if(direction[i].stop_id === stop.stopId) {								
 									if(stop.arrival && stop.arrival.time) {
 										if(typeof stop.arrival.time.low === 'number' && stop.arrival.time > Date.now() / 1000) {
