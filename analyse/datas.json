@@ -108,5 +108,80 @@
         "type": 1,
         "station_name": "Charles de Gaulle",
         "arrival_delta": 0.9839999675750732
+    },
+    {
+        "type": 0,
+        "station_name": "Charles de Gaulle",
+        "arrival_delta": 10.190000057220459
+    },
+    {
+        "type": 0,
+        "station_name": "Saint-Lazare",
+        "arrival_delta": 33.687000036239624
+    },
+    {
+        "type": 1,
+        "station_name": "Saint-Lazare",
+        "arrival_delta": 0.20300006866455078
+    },
+    {
+        "type": 0,
+        "station_name": "Aiguelongue",
+        "arrival_delta": -6.480999946594238
+    },
+    {
+        "type": 0,
+        "station_name": "Jeu de Mail des Abbés",
+        "arrival_delta": 51.25099992752075
+    },
+    {
+        "type": 1,
+        "station_name": "Jeu de Mail des Abbés",
+        "arrival_delta": 11.710000038146973
+    },
+    {
+        "type": 0,
+        "station_name": "Beaux-Arts",
+        "arrival_delta": 6.766999959945679
+    },
+    {
+        "type": 0,
+        "station_name": "Corum",
+        "arrival_delta": 35.63499999046326
+    },
+    {
+        "type": 0,
+        "station_name": "Corum",
+        "arrival_delta": -0.5559999942779541
+    },
+    {
+        "type": 0,
+        "station_name": "Louis Blanc- Agora de la Danse",
+        "arrival_delta": 55.15700006484985
+    },
+    {
+        "type": 0,
+        "station_name": "Place Albert 1er - Saint-Charles",
+        "arrival_delta": -6.959000110626221
+    },
+    {
+        "type": 0,
+        "station_name": "Stade Philippidès",
+        "arrival_delta": 10.878000020980835
+    },
+    {
+        "type": 0,
+        "station_name": "Saint-Éloi",
+        "arrival_delta": 31.98900008201599
+    },
+    {
+        "type": 1,
+        "station_name": "Saint-Éloi",
+        "arrival_delta": -16.22499990463257
+    },
+    {
+        "type": 0,
+        "station_name": "Universités Sciences et Lettres",
+        "arrival_delta": -2.575000047683716
     }
 ]

@@ -259,9 +259,9 @@ async function getTripData(tripId) {
 				if(stopName != "") {
 					var t = elt.departure.time - (Date.now() / 1000);
 					var stationState = -1;
-					if(t > -15 && t < 15)
+					if(t > -20 && t < 17)
 						stationState = 0;
-					else if(t > 15)
+					else if(t > 17)
 						stationState = 1;
 
 					data.push({
