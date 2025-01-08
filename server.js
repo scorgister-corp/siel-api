@@ -50,8 +50,8 @@ handlers.post("/data", async (req, res) => {
         send400(res);
         return;
     }
-
-    var data = await  utils.getData(req.body["stop_name"], req.body["direction"], req.body["line"]);
+    
+    var data = await utils.getData(req.body["stop_name"], req.body["direction"], req.body["line"]);
     send(res, data);
 });
 
@@ -124,7 +124,7 @@ function send(res, body, code=200) {
     res.status(code);
     res.set("Access-Control-Allow-Origin", "*");
     res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.set("Access-Control-Allow-Headers", "*");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
     res.json(body);
 }
 
