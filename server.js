@@ -3,7 +3,7 @@ const handler = require('./handler')
 const utils = require('./utils.js');
 const fs = require('fs');
 
-const VERSION = "1.0.0"
+const VERSION = "1.1.0"
 
 
 const app = express();
@@ -29,6 +29,16 @@ handlers.post("/analyse", (req, res) => {
     
 
     send(res, {});
+});
+
+handlers.post("/info", async (req, res) => {    
+    if(req.body["vehicule_id"] == undefined) {
+        send400(res);
+        return;
+    }
+
+    var data = await utils.getVehiculeInfo(req.body["vehicule_id"]);
+    send(res, data);
 });
 
 handlers.get("/trip", async (req, res) => {    

@@ -1,6 +1,7 @@
 const GtfsRealtimeBindings = require('gtfs-realtime-bindings');
 const ALLDATA = require('./merged_data.json');
 const DIRECTIONS = require('./directions.json');
+const INFOS = require('./infos.json');
 
 const all_data = ALLDATA;
 
@@ -282,6 +283,60 @@ async function getTripData(tripId) {
 	return data;
 }
 
+async function getTripByVehiculeId(vehiculeId) {
+	if(vehiculeId === undefined || vehiculeId == "") {
+		console.error("Error [3.1]");
+		return null;
+	}
+
+	var response = null;
+	try {
+		response = await fetch(
+			'https://data.montpellier3m.fr/TAM_MMM_GTFSRT/TripUpdate.pb',
+			{
+				mode: 'cors',
+				headers: {
+					'Access-Control-Allow-Origin': '*',
+				},
+			},
+		);
+	}catch(e) {
+		console.error("Error [2.3]");
+		return null;
+	}
+	
+	if (!response.ok) {
+		const error = new Error(`${response.url}: ${response.status} ${response.statusText}`);
+		error.response = response;
+		throw error;
+	}
+	const buffer = await response.arrayBuffer();
+		
+	const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(buffer));
+	var data = undefined;
+	
+	for(var i = 0; i < feed.entity.length; i++) {
+		var entity = feed.entity[i];
+		if(entity.tripUpdate.vehicle && entity.tripUpdate.vehicle.id == vehiculeId) {
+			data = entity.tripUpdate.trip.tripId;
+			break;
+		}
+	}
+
+	return data;
+}
+
+async function getVehiculeInfo(vehiculeId) {
+	var data = INFOS[vehiculeId];
+	if(data == null) {
+		return null;
+	}
+
+	var trip = await getTripByVehiculeId(vehiculeId);
+	data["trip_id"] = trip;
+	return data;
+}
+
 function toPascalCase(str) {
 	return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
 }
@@ -308,5 +363,7 @@ module.exports = {
 	getData,
 	getAlert,
 	getDirections,
-	getLines
+	getLines,
+	getVehiculeInfo,
+	getTripByVehiculeId
 };
