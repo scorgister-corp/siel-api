@@ -126,11 +126,13 @@ function getStopDatas(stopName, directions, lines) {
         if(stopName.toUpperCase() == elt.stop_name.toUpperCase()
             && directions.includes(elt.trip_headsign.toUpperCase())
             && lines.includes(elt.route_id.substring(elt.route_id.indexOf("-")+1, elt.route_id.length))) {
-            datas[elt.stop_id] = {
-                stop_name: elt.stop_name,
-                direction: elt.trip_headsign,
-                route_id: elt.route_id
-            };
+                elt.stop_id.forEach(e => {
+                    datas[e] = {
+                        stop_name: elt.stop_name,
+                        direction: elt.trip_headsign,
+                        route_id: elt.route_id
+                    };
+                });
 
             if(!routeIds.includes(elt.route_id))
                 routeIds.push(elt.route_id);
@@ -141,7 +143,7 @@ function getStopDatas(stopName, directions, lines) {
 
 function getStopName(stopId) {
     for(let i = 0; i < ALL_DATA.length; i++)
-        if(ALL_DATA[i].stop_id == stopId)
+        if(ALL_DATA[i].stop_id.includes(stopId))
             return ALL_DATA[i].stop_name;
     return undefined;
 }
@@ -187,6 +189,18 @@ async function getTripInfo(tripId) {
     return data;
 }
 
+function checkTripStation(tripId, directions) {
+    
+    for(let data of ALL_DATA) {
+        
+        if(data.trip.includes(tripId) && directions.includes(data.trip_headsign)) {
+            console.log(data.trip_headsign)
+            return true;
+        }
+    }
+    return false
+}
+
 async function getTripUpdateData(stopDatas) {
     let tripUpdate = await getLastTripUpdate();
 
@@ -199,17 +213,22 @@ async function getTripUpdateData(stopDatas) {
         if(entity.tripUpdate.trip.scheduleRelationship == 3 || entity.tripUpdate.stopTimeUpdate.length == 0) {
             return;
         }
-        
 
-        if(!stopDatas[1].includes(entity.tripUpdate.trip.routeId) || !stopDatas[2].includes(getStopName(entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1].stopId).toUpperCase()))
+
+        if(!stopDatas[1].includes(entity.tripUpdate.trip.routeId)
+           // || !stopDatas[2].includes(getStopName(entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1].stopId).toUpperCase())
+          //  || !checkTripStation(entity.tripUpdate.trip.tripId, stopDatas[2])
+        )
             return;
+
         
         entity.tripUpdate.stopTimeUpdate.forEach(stopTime => {
             // The vehicle is proceeding in accordance with its static schedule of stops, although not necessarily according to the times of the schedule. 
+            
             if(stopTime.scheduleRelationship == 0
                 && stopDatas[0][stopTime.stopId] != undefined
                 && stopTime.departure.time.toString() - new Date().getTime() / 1000 >= 0) { 
-
+                    
                 data.push({
                     trip_headsign: getStopName(getTripHeadsigneStopId(entity.tripUpdate.stopTimeUpdate)),
                     departure_time: stopTime.departure.time.toString(),
@@ -219,6 +238,9 @@ async function getTripUpdateData(stopDatas) {
                     trip_id: entity.tripUpdate.trip.tripId,
                     theoretical: false
                 });
+
+              //  console.log(data);
+                
             }
             
         });
