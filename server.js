@@ -1,9 +1,10 @@
 const express = require('express');
 const handler = require('./handler')
-const utils = require('./utils.js');
+//const utils = require('./utils.js');
+const core = require('./core.js');
 const fs = require('fs');
 
-const VERSION = "1.1.0"
+const VERSION = "1.2.0"
 
 
 const app = express();
@@ -15,7 +16,7 @@ app.options("*", (req, res) => {
     send(res, {});
 });
 
-
+/*
 handlers.post("/analyse", (req, res) => {   
     var currentData = []; 
     if(fs.existsSync("./datas.json")) {
@@ -30,20 +31,23 @@ handlers.post("/analyse", (req, res) => {
 
     send(res, {});
 });
+*/
 
-handlers.post("/info", async (req, res) => {    
+handlers.post("/info", (req, res) => {    
     if(req.body["vehicule_id"] == undefined) {
         send400(res);
         return;
     }
 
-    var data = await utils.getVehiculeInfo(req.body["vehicule_id"]);
-    send(res, data);
+    core.getVehiculeInfo(req.body["vehicule_id"]).then(e => {
+        send(res, e);
+    });
 });
 
-handlers.get("/trip", async (req, res) => {    
-    var data = await  utils.getTripData(req.query["tripid"]);
-    send(res, data);
+handlers.get("/trip", (req, res) => {    
+    core.getTripInfo(req.query["tripid"]).then(e => {
+        send(res, e);
+    });
 });
 
 handlers.get("/version", (req, res) => {
@@ -51,7 +55,7 @@ handlers.get("/version", (req, res) => {
 });
 
 handlers.get("/stops", (req, res) => {
-    send(res, utils.getAllStops());
+    send(res, core.getAllStops());
 });
 
 
@@ -61,8 +65,9 @@ handlers.post("/data", async (req, res) => {
         return;
     }
     
-    var data = await utils.getData(req.body["stop_name"], req.body["direction"], req.body["line"]);
-    send(res, data);
+    core.getUpdate(req.body["stop_name"], req.body["direction"], req.body["line"]).then(e => {
+        send(res, e);
+    });
 });
 
 handlers.post("/alert", async (req, res) => {
@@ -71,27 +76,19 @@ handlers.post("/alert", async (req, res) => {
         return;
     }
 
-    var data = await utils.getAlert(req.body["line"]);
-        
-    send(res, data);
+    core.getAlerts(req.body["line"]).then(e => {
+        send(res, e);
+    });
 });
 
-handlers.post("/directions", async (req, res) => {
+
+handlers.post("/stopdata", async (req, res) => {
     if(req.body["stop_name"] == undefined) {
         send400(res);
         return;
     }
 
-    send(res, utils.getDirections(req.body["stop_name"]));
-});
-
-handlers.post("/lines", async (req, res) => {
-    if(req.body["stop_name"] == undefined) {
-        send400(res);
-        return;
-    }
-
-    send(res, utils.getLines(req.body["stop_name"]));
+    send(res, core.getDirectionsAndLines(req.body["stop_name"]));
 });
 
 // send 404

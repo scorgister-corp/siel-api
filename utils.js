@@ -1,4 +1,4 @@
-const GtfsRealtimeBindings = require('gtfs-realtime-bindings');
+/*const GtfsRealtimeBindings = require('gtfs-realtime-bindings');
 const ALLDATA = require('./merged_data.json');
 const DIRECTIONS = require('./directions.json');
 const INFOS = require('./infos.json');
@@ -50,7 +50,7 @@ function timestampToTime(timestamp) {
 }
 
 function showTrip(tripData) {
-	const data = all_data.find(item => item.trip_id.includes(tripData.tripId));
+	const data = all_data.find(item => item.trip.find(it => it.id.includes(tripData.tripId)));
 	if (data) {
 		if (data.hasOwnProperty('trip_headsign') && data.trip_headsign !== '') {
 			return data.trip_headsign;
@@ -147,6 +147,7 @@ async function getAlert(line) {
 }
 
 async function findData(direction, line) {
+	
 	if(direction === undefined || direction.length === 0 || direction === null) {
 		console.error("Error [0]");
 		return null;
@@ -200,7 +201,8 @@ async function findData(direction, line) {
 														route_short_name: direction[i].route_id.split('-')[1],
 														stop_name: direction[i].stop_name,
 														vehicle_id: (entity.tripUpdate.vehicle!=null?entity.tripUpdate.vehicle.id:null),
-														trip_id: entity.tripUpdate.trip.tripId
+														trip_id: entity.tripUpdate.trip.tripId,
+														theoretical: false
 													});
 												}
 											}
@@ -214,10 +216,90 @@ async function findData(direction, line) {
 			}
 		}
 	});
+
+	//var oData = getTheoretical(direction);
+	/*var oData = [];
+	var rData = [];
+	oData.forEach(element => {
+		var conti = true;
+		for(var i = 0; i < data.length; i++) {
+			if(data[i].trip_id == element.trip_id) {
+				rData.push(data[i]);
+				conti = false;
+				break;
+			}
+		}
+
+		if(conti)
+			rData.push(element);
+	});
+	rData.sort((a, b) => a.departure_time.localeCompare(b.departure_time));
 	
+	return rData;*//*
+
 	data.sort((a, b) => a.departure_time.localeCompare(b.departure_time));
-	
 	return data;
+}
+
+function createDate(h, m, s) {
+	var time = new Date(0);
+	time.setHours(h);
+	time.setMinutes(m);
+	time.setSeconds(s);
+
+	var now = new Date();
+	if(now.getTimezoneOffset() != 0)
+		now.setMinutes(-now.getTimezoneOffset());
+	if(time.getHours() == now.getHours()) {
+		if(time.getMinutes() < now.getMinutes()) {
+			return new Date();
+		}
+		now.setMinutes(time.getMinutes());
+		now.setSeconds(time.getSeconds());
+	}else if(time.getHours() < now.getHours()) {
+		now.setDate(now.getDate() + 1);
+		now.setHours(time.getHours());
+		now.setMinutes(time.getMinutes());
+		now.setSeconds(time.getSeconds());
+	}else {
+		now.setHours(time.getHours());
+		now.setMinutes(time.getMinutes());
+		now.setSeconds(time.getSeconds());
+	}
+
+	return now;
+}
+
+function getTheoretical(directions) {
+	var result = [];
+	all_data.forEach(elt => {		
+		directions.forEach(dir => {
+			if(elt.route_id == dir.route_id && elt.stop_name == dir.stop_name && elt.trip_headsign == dir.trip_headsign) {
+				
+				elt.trip.forEach(trip => {
+					var h = trip.time.split(":")[0], m = trip.time.split(":")[1], s = trip.time.split(":")[2];
+					var n = new Date();
+					if(n.getTimezoneOffset() != 0)
+						n.setMinutes(-n.getTimezoneOffset());
+					
+					var c = createDate(h, m, s);
+					if(c.getTime() >= n.getTime() && c.getTime() - n.getTime() <= 3600000) {
+						result.push({
+							trip_headsign: elt.trip_headsign,
+							departure_time: (c.getTime()).toString().substring(0, c.getTime().toString().length-3),
+							route_short_name: elt.route_id.split("-")[1],
+							stop_name: elt.stop_name,
+							vehicle_id: null,
+							trip_id: trip.id, 
+							theoretical: true
+						});
+					}
+				});
+			}
+		});
+	});
+
+	return result;
 }
 
 
@@ -366,4 +448,4 @@ module.exports = {
 	getLines,
 	getVehiculeInfo,
 	getTripByVehiculeId
-};
+};*/
