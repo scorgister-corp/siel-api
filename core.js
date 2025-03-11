@@ -160,15 +160,21 @@ async function getTripInfo(tripId) {
         if(stopName == undefined) {
             return;
         }
-        var t = elt.departure.time - (Date.now() / 1000);
-        var stationState = -1;
-        if(t > -20 && t < 17)
-            stationState = 0;
-        else if(t > 17)
-            stationState = 1;
+
+        let stationState = -1;
+        let departureTime = "0";
+        if(elt.scheduleRelationship == 0) {
+            var t = elt.departure.time - (Date.now() / 1000);
+            if(t > -20 && t < 17)
+                stationState = 0;
+            else if(t > 17)
+                stationState = 1;
+
+            departureTime = elt.departure.time.toString();
+        }
 
         data.push({
-            departure_time: elt.departure.time.toString(),
+            departure_time: departureTime,
             station_name: stopName,
             state: stationState,
             vehicle_id: (trip.vehicle!=null?trip.vehicle.id:null),
