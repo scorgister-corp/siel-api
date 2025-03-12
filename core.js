@@ -90,7 +90,12 @@ function getAllStops() {
 
 async function getDirectionsAndLines(stopName) {
 	let stop = {lines: DIRECTIONS[stopName]["lines"]}
-    let trip = await getLastTripUpdate();    
+    let trip = await getLastTripUpdate();
+
+    if(trip == undefined) {
+        return {directions: [], lines: []};
+    }
+
     let stopIds = gtfsRes.getStopIds(stopName);
     
     let destNames = [];
@@ -131,6 +136,10 @@ async function getVehiculeInfo(vehiculeId) {
 async function getTripUpdate(tripId) {
     let tripUpdate = await getLastTripUpdate();
 
+    if(tripUpdate == undefined) {
+        return undefined;
+    }
+
     for(let i = 0; i < tripUpdate.entity.length; i++) {
 		let entity = tripUpdate.entity[i];
 		if(entity.tripUpdate.trip.tripId && entity.tripUpdate.trip.tripId == tripId) {
@@ -141,6 +150,9 @@ async function getTripUpdate(tripId) {
 
 async function getTripIdByVehiculeId(vehiculeId) {
     let tripUpdate = await getLastTripUpdate();
+
+    if(tripUpdate == undefined)
+        return undefined;
 
     for(let i = 0; i < tripUpdate.entity.length; i++) {
 		let entity = tripUpdate.entity[i];
@@ -225,6 +237,7 @@ async function getTripUpdateData(stopDatas) {
 
     const data = [];
 
+    let tripIds = [];
     tripUpdate.entity.forEach(entity => {
         if(entity.tripUpdate.trip.scheduleRelationship == 3 || entity.tripUpdate.stopTimeUpdate.length == 0) {
             return;
@@ -256,7 +269,7 @@ async function getTripUpdateData(stopDatas) {
                     trip_id: entity.tripUpdate.trip.tripId,
                     theoretical: false
                 });
-
+                tripIds.push(entity.tripUpdate.trip.tripId);
               //  console.log(data);
                 
             }
@@ -264,6 +277,7 @@ async function getTripUpdateData(stopDatas) {
         });
         
     });
+   // console.log(tripIds);
 
     data.sort((a, b) => a.departure_time.localeCompare(b.departure_time));
 
@@ -281,6 +295,10 @@ function getTripHeadsigneStopId(stopTimeUpdate) {
 
 async function getAlerts(lines) {
     let alerts = await getLastAlert();
+
+    if(alerts == undefined) {
+        return [];
+    }
 
     const data = [];
     

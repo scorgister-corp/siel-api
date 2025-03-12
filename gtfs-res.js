@@ -76,6 +76,63 @@ function getStopName(stopId) {
     return STOPS[stopId].stop_name;
 }
 
+function getOtherTripIds(exculdeIds, deepSec, stopIds) {
+    let todayTrip = getTodayTrips();
+    console.log(stopIds);
+    
+    const datas = [];
+
+    let n = new Date();
+	if(n.getTimezoneOffset() != 0)
+	    n.setMinutes(-n.getTimezoneOffset());
+    console.log(n);
+    
+    for(let tt of todayTrip) {
+        for(let sti of Object.keys(stopIds)) {
+            if(STOP_TIMES[tt.trip_id][sti]) {
+                let h = STOP_TIMES[tt.trip_id][sti].split(":")[0], m = STOP_TIMES[tt.trip_id][sti].split(":")[1], s = STOP_TIMES[tt.trip_id][sti].split(":")[2];
+                let c = createDate(h, m, s);
+                
+                if(c.getTime() >= n.getTime() && c.getTime() - n.getTime() <= 3600000) {
+                    //console.log(c);
+                    datas.push(tt.trip_id);
+                }
+            }
+        }
+    }
+    console.log(datas);
+    return datas;
+}
+
+function createDate(h, m, s) {
+	var time = new Date(0);
+	time.setHours(h);
+	time.setMinutes(m);
+	time.setSeconds(s);
+
+	var now = new Date();
+	if(now.getTimezoneOffset() != 0)
+		now.setMinutes(-now.getTimezoneOffset());
+	if(time.getHours() == now.getHours()) {
+		if(time.getMinutes() < now.getMinutes()) {
+			return new Date();
+		}
+		now.setMinutes(time.getMinutes());
+		now.setSeconds(time.getSeconds());
+	}else if(time.getHours() < now.getHours()) {
+		now.setDate(now.getDate() + 1);
+		now.setHours(time.getHours());
+		now.setMinutes(time.getMinutes());
+		now.setSeconds(time.getSeconds());
+	}else {
+		now.setHours(time.getHours());
+		now.setMinutes(time.getMinutes());
+		now.setSeconds(time.getSeconds());
+	}
+
+	return now;
+}
+
 module.exports = {
     getTodayServices,
     getTodayTrips,
@@ -84,5 +141,6 @@ module.exports = {
     getTodayDate,
     getRoute,
     getStopIds,
-    getStopName
+    getStopName,
+    getOtherTripIds
 };
