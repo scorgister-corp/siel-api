@@ -87,8 +87,9 @@ handlers.post("/stopdata", async (req, res) => {
         send400(res);
         return;
     }
-
-    send(res, core.getDirectionsAndLines(req.body["stop_name"]));
+    core.getDirectionsAndLines(req.body["stop_name"]).then(e => {
+        send(res, e);
+    });
 });
 
 // send 404
