@@ -187,20 +187,22 @@ function getStopName(stopId) {
 
 async function isTheoreticalTrip(tripId) {
     let trip = await getTripUpdate(tripId);
+    if(trip == undefined)
+        return true;
+    
     return trip.stopTimeUpdate.length <= 1 || getStopName(trip.stopTimeUpdate[trip.stopTimeUpdate.length-1].stopId).toUpperCase() != gtfsRes.getStaticDestinationName(tripId).toUpperCase();
 }
 
 async function getTripInfo(tripId) {
     let trip = await getTripUpdate(tripId);
 
-    if(trip == undefined)
-        return null;
-
     let data = [];
     let stops = []
     
     if(!(await isTheoreticalTrip(tripId))) {
-        
+        if(trip == undefined)
+            return null;
+
         trip.stopTimeUpdate.forEach(elt => {
             var stopName = getStopName(elt.stopId);
 
