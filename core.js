@@ -185,6 +185,11 @@ function getStopName(stopId) {
     return undefined;
 }
 
+async function isTheoreticalTrip(tripId) {
+    let trip = await getTripUpdate(tripId);
+    return trip.stopTimeUpdate.length <= 1 || getStopName(trip.stopTimeUpdate[trip.stopTimeUpdate.length-1].stopId).toUpperCase() != gtfsRes.getStaticDestinationName(tripId).toUpperCase();
+}
+
 async function getTripInfo(tripId) {
     let trip = await getTripUpdate(tripId);
 
@@ -193,8 +198,9 @@ async function getTripInfo(tripId) {
 
     let data = [];
     let stops = []
-
-    if(trip.stopTimeUpdate.length >= 2) {
+    
+    if(!(await isTheoreticalTrip(tripId))) {
+        
         trip.stopTimeUpdate.forEach(elt => {
             var stopName = getStopName(elt.stopId);
 
@@ -221,7 +227,9 @@ async function getTripInfo(tripId) {
                 vehicle_id: (trip.vehicle!=null?trip.vehicle.id:null),
                 trip_id: trip.trip.tripId,
                 route_short_name: trip.trip.routeId.split('-')[1],
-                schedule_relationship: elt.scheduleRelationship
+                trip_color: gtfsRes.getTripColor(trip.trip.tripId),
+                schedule_relationship: elt.scheduleRelationship,
+                theoretical: false
             });
             stops.push(stopName);
         });
@@ -253,7 +261,6 @@ async function getTripUpdateData(stopDatas) {
             return;
         }
 
-        
         entity.tripUpdate.stopTimeUpdate.forEach(stopTime => {
             // The vehicle is proceeding in accordance with its static schedule of stops, although not necessarily according to the times of the schedule. 
             
@@ -267,6 +274,7 @@ async function getTripUpdateData(stopDatas) {
                     route_short_name: entity.tripUpdate.trip.routeId.split('-')[1],
                     vehicle_id: (entity.tripUpdate.vehicle!=null?entity.tripUpdate.vehicle.id:null),
                     trip_id: entity.tripUpdate.trip.tripId,
+                    trip_color: gtfsRes.getTripColor(entity.tripUpdate.trip.tripId),
                     theoretical: false
                 });
                 tripIds.push(entity.tripUpdate.trip.tripId);                
