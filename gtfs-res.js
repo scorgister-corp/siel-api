@@ -13,7 +13,7 @@ function getTodayServices() {
             data.push(d);
         }
     }    
-    return data
+    return data;
 }
 
 function getTodayTrips() {
@@ -146,22 +146,26 @@ function getTrip(tripId) {
     return TRIPS[tripId];
 }
 
-function getOtherTripIds(exculdeIds, deepSec, stopDatas) {
+function getServiceId(tripID) {
+    if(TRIPS[tripID])
+        return TRIPS[tripID].service_id
+}
+
+function getOtherTripIds(exculdeIds, deepSec, stopDatas, serviceIds) {
     let todayTrip = getTodayTrips();
     
-    let serviceIds = []
-
+  /*  let serviceIds = [];
+    
     for(let tripId of exculdeIds)
         if(TRIPS[tripId] && !serviceIds.includes(TRIPS[tripId].service_id))
             serviceIds.push(TRIPS[tripId].service_id);
         
-
+    //console.log(serviceIds);
+*/
     const datas = [];
 
     let n = new Date();
-	if(n.getTimezoneOffset() != 0)
-	    n.setMinutes(-n.getTimezoneOffset());
-   
+
     for(let tt of todayTrip) {
         for(let sti of Object.keys(stopDatas[0])) {
             if(TRIPS[tt.trip_id] && serviceIds.includes(TRIPS[tt.trip_id].service_id)) {  
@@ -174,18 +178,18 @@ function getOtherTripIds(exculdeIds, deepSec, stopDatas) {
                     
                     let h = STOP_TIMES[tt.trip_id][sti].split(":")[0], m = STOP_TIMES[tt.trip_id][sti].split(":")[1], s = STOP_TIMES[tt.trip_id][sti].split(":")[2];
                     let c = createDate(h, m, s);
-                    
+                                        
                     if(c.getTime() >= n.getTime() && c.getTime() - n.getTime() <= deepSec) {    
-                            datas.push({
-                                trip_headsign: destName,
-                                departure_time: c.getTime().toString().substring(0, c.getTime().toString().length - 3),
-                                route_short_name: TRIPS[tt.trip_id].trip_short_name,
-                                vehicle_id: null,
-                                trip_id: tt.trip_id,
-                                trip_color: getTripColor(tt.trip_id),
-                                theoretical: true
-                            });
-                        }
+                        datas.push({
+                            trip_headsign: destName,
+                            departure_time: c.getTime().toString().substring(0, c.getTime().toString().length - 3),
+                            route_short_name: TRIPS[tt.trip_id].trip_short_name,
+                            vehicle_id: null,
+                            trip_id: tt.trip_id,
+                            trip_color: getTripColor(tt.trip_id),
+                            theoretical: true
+                        });
+                    }
                 }
             }
         }
@@ -199,6 +203,39 @@ function createDate(h, m, s) {
 	time.setHours(h);
 	time.setMinutes(m);
 	time.setSeconds(s);
+    //console.log(time);
+    //console.log(time.getDate());
+
+    let now = new Date();
+
+    if(now.getHours() < 12) {
+        if(time.getDate() > 1) {
+            if(now.getHours() < time.getHours() || (now.getHours() == time.getHours() && now.getMinutes() <= time.getMinutes())) {
+                now.setSeconds(time.getSeconds());
+                now.setHours(time.getHours());
+                now.setMinutes(time.getMinutes());
+                return now;
+            }else {
+                return new Date(0);
+            }
+            //now - > 23h15  14
+            //time -> 00:10 d=2
+        }
+    }
+
+    if(time.getDate() > 1) {
+        now.setSeconds(time.getSeconds());
+        now.setHours(time.getHours());
+        now.setMinutes(time.getMinutes());
+        now.setDate(now.getDate() + 1);
+        return now;
+    }
+
+    now.setSeconds(time.getSeconds());
+    now.setHours(time.getHours());
+    now.setMinutes(time.getMinutes());
+    return now;
+    /*
 
 	var now = new Date();
 	//if(now.getTimezoneOffset() != 0)
@@ -221,6 +258,7 @@ function createDate(h, m, s) {
 	}
 
 	return now;
+    */
 }
 
 module.exports = {
@@ -236,5 +274,6 @@ module.exports = {
     getStaticLine,
     getTripColor,
     getTrip,
-    getStaticDestinationName
+    getStaticDestinationName,
+    getServiceId
 };

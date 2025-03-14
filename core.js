@@ -189,7 +189,7 @@ async function isTheoreticalTrip(tripId) {
     let trip = await getTripUpdate(tripId);
     if(trip == undefined)
         return true;
-    
+
     return trip.stopTimeUpdate.length <= 1 || getStopName(trip.stopTimeUpdate[trip.stopTimeUpdate.length-1].stopId).toUpperCase() != gtfsRes.getStaticDestinationName(tripId).toUpperCase();
 }
 
@@ -239,36 +239,52 @@ async function getTripInfo(tripId) {
         data = gtfsRes.getStaticLine(tripId);
     }
 
+    if(data && data.length > 0) {
+        let now = new Date();
+        if(data[data.length-1].departure_time - Math.floor(now.getTime() / 1000) + 60 < 0) {
+            return [];
+        }
+    }
+    
     return data;
 }
 
 async function getTripUpdateData(stopDatas) {
     let tripUpdate = await getLastTripUpdate();
-
+    
     if(tripUpdate == undefined)
         return null;
-
+    
     let data = [];
-
+    let serviceIds = [];
+    
     let tripIds = [];
     tripUpdate.entity.forEach(entity => {
+        let sId = gtfsRes.getServiceId(entity.tripUpdate.trip.tripId);
+        
+        if(!serviceIds.includes(sId))
+            serviceIds.push(sId);
+
         if(entity.tripUpdate.trip.scheduleRelationship == 3 || entity.tripUpdate.stopTimeUpdate.length == 0) {
             return;
         }
 
         if(!stopDatas[1].includes(entity.tripUpdate.trip.routeId.split('-')[1])
-             || !stopDatas[2].includes(getStopName(entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1].stopId).toUpperCase())
-    ) {
-            
+            || !stopDatas[2].includes(getStopName(entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1].stopId).toUpperCase())
+        ) {  
             return;
         }
-
+        //console.log(stopDatas, entity.tripUpdate.trip.routeId)
+        //console.log(entity.tripUpdate);
+    
         entity.tripUpdate.stopTimeUpdate.forEach(stopTime => {
             // The vehicle is proceeding in accordance with its static schedule of stops, although not necessarily according to the times of the schedule. 
+           // console.log(stopTime);
             
+           // console.log(stopTime.departure.time.toString(), Math.floor(new Date().getTime() / 1000).toString());
             if(stopTime.scheduleRelationship == 0
                 && stopDatas[0][stopTime.stopId] != undefined
-                && stopTime.departure.time.toString() - new Date().getTime() / 1000 >= 0) { 
+                && stopTime.departure.time.toString() - Math.floor(new Date().getTime() / 1000).toString() >= 0) { 
                     
                 data.push({
                     trip_headsign: gtfsRes.getStopName(getTripHeadsigneStopId(entity.tripUpdate.stopTimeUpdate)),
@@ -286,7 +302,8 @@ async function getTripUpdateData(stopDatas) {
         
     });
     
-    const otherData = gtfsRes.getOtherTripIds(tripIds, 3600000, stopDatas);
+    
+    const otherData = gtfsRes.getOtherTripIds(tripIds, 3600000, stopDatas, serviceIds);
     for(let oD of otherData)
         data.push(oD);
     
