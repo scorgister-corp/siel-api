@@ -287,7 +287,6 @@ async function getTripUpdateData(stopDatas) {
                 if(departureStopName == destinationStopName) {
                     destinationStopName += " " + (entity.tripUpdate.trip.directionId == 0?"A":"B");
                 }
-                console.log(entity.tripUpdate);
                 
                 data.push({
                     trip_headsign: destinationStopName,
