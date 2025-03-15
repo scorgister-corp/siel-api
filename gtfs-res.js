@@ -76,19 +76,28 @@ function getStopName(stopId) {
     return STOPS[stopId].stop_name;
 }
 
-function getStaticDestinationName(tripId) {
+function getStaticDepartureDestinationName(tripId) {
     if(!STOP_TIMES[tripId])
         return undefined;
     
     let times = Object.values(STOP_TIMES[tripId]);
-
+    let departureName = undefined;
+    let destinationName = undefined;
     times.sort((a, b) => a.localeCompare(b));
     for(let st of Object.keys(STOP_TIMES[tripId])) {
+        if(STOP_TIMES[tripId][st] == times[0]) {
+            departureName = getStopName(st);
+        }
+
         if(STOP_TIMES[tripId][st] == times[times.length-1]) {
-            return getStopName(st);
+            destinationName = getStopName(st);
+        }
+
+        if(departureName && destinationName) {
+            return [departureName, destinationName];
         }
     }
-    return undefined;
+    return []
 }
 
 function getStaticLine(tripId) {
@@ -108,7 +117,6 @@ function getStaticLine(tripId) {
                 break;
             }
         }
-       // let date = createDate(t.split(":")[0], t.split(":")[1], t.split(":")[2]);
         
         let departureTime = Math.floor(createDate(t.split(":")[0], t.split(":")[1], t.split(":")[2]).getTime() / 1000);
         
@@ -130,8 +138,7 @@ function getStaticLine(tripId) {
             theoretical: true
         });
     }
-    //console.log(data);
-    
+
     return data;
 }
 
@@ -153,15 +160,7 @@ function getServiceId(tripID) {
 
 function getOtherTripIds(exculdeIds, deepSec, stopDatas, serviceIds) {
     let todayTrip = getTodayTrips();
-    
-  /*  let serviceIds = [];
-    
-    for(let tripId of exculdeIds)
-        if(TRIPS[tripId] && !serviceIds.includes(TRIPS[tripId].service_id))
-            serviceIds.push(TRIPS[tripId].service_id);
-        
-    //console.log(serviceIds);
-*/
+
     const datas = [];
 
     let n = new Date();
@@ -169,19 +168,22 @@ function getOtherTripIds(exculdeIds, deepSec, stopDatas, serviceIds) {
     for(let tt of todayTrip) {
         for(let sti of Object.keys(stopDatas[0])) {
             if(TRIPS[tt.trip_id] && serviceIds.includes(TRIPS[tt.trip_id].service_id)) {  
-                let destName = getStaticDestinationName(tt.trip_id);
+                let depDestName = getStaticDepartureDestinationName(tt.trip_id);
                 if(STOP_TIMES[tt.trip_id][sti]
                     && !exculdeIds.includes(tt.trip_id) && !datas.includes(tt.trip_id)
                     && stopDatas[1].includes(TRIPS[tt.trip_id].trip_short_name)
-                    && stopDatas[2].includes(destName.toUpperCase())
+                    && stopDatas[2].includes(depDestName[1].toUpperCase())
                 ) {
-                    
+                    if(depDestName[0].toUpperCase() == depDestName[1].toUpperCase()) {
+                        depDestName[1] += " " + (TRIPS[tt.trip_id].direction_id == 0?"A":"B");
+                    }
+
                     let h = STOP_TIMES[tt.trip_id][sti].split(":")[0], m = STOP_TIMES[tt.trip_id][sti].split(":")[1], s = STOP_TIMES[tt.trip_id][sti].split(":")[2];
                     let c = createDate(h, m, s);
-                                        
+
                     if(c.getTime() >= n.getTime() && c.getTime() - n.getTime() <= deepSec) {    
                         datas.push({
-                            trip_headsign: destName,
+                            trip_headsign: depDestName[1],
                             departure_time: c.getTime().toString().substring(0, c.getTime().toString().length - 3),
                             route_short_name: TRIPS[tt.trip_id].trip_short_name,
                             vehicle_id: null,
@@ -203,8 +205,6 @@ function createDate(h, m, s) {
 	time.setHours(h);
 	time.setMinutes(m);
 	time.setSeconds(s);
-    //console.log(time);
-    //console.log(time.getDate());
 
     let now = new Date();
 
@@ -218,8 +218,7 @@ function createDate(h, m, s) {
             }else {
                 return new Date(0);
             }
-            //now - > 23h15  14
-            //time -> 00:10 d=2
+
         }
     }
 
@@ -235,30 +234,6 @@ function createDate(h, m, s) {
     now.setHours(time.getHours());
     now.setMinutes(time.getMinutes());
     return now;
-    /*
-
-	var now = new Date();
-	//if(now.getTimezoneOffset() != 0)
-	//	now.setMinutes(-now.getTimezoneOffset());
-	if(time.getHours() == now.getHours()) {
-		if(time.getMinutes() < now.getMinutes()) {
-            return new Date();
-		}
-		now.setMinutes(time.getMinutes());
-		now.setSeconds(time.getSeconds());
-	}else if(time.getHours() < now.getHours()) {
-		now.setDate(now.getDate() + 1);
-		now.setHours(time.getHours());
-		now.setMinutes(time.getMinutes());
-		now.setSeconds(time.getSeconds());
-	}else {
-		now.setHours(time.getHours());
-		now.setMinutes(time.getMinutes());
-		now.setSeconds(time.getSeconds());
-	}
-
-	return now;
-    */
 }
 
 module.exports = {
@@ -274,6 +249,6 @@ module.exports = {
     getStaticLine,
     getTripColor,
     getTrip,
-    getStaticDestinationName,
+    getStaticDepartureDestinationName,
     getServiceId
 };

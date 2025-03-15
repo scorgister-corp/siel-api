@@ -190,7 +190,7 @@ async function isTheoreticalTrip(tripId) {
     if(trip == undefined)
         return true;
 
-    return trip.stopTimeUpdate.length <= 1 || getStopName(trip.stopTimeUpdate[trip.stopTimeUpdate.length-1].stopId).toUpperCase() != gtfsRes.getStaticDestinationName(tripId).toUpperCase();
+    return trip.stopTimeUpdate.length <= 1 || getStopName(trip.stopTimeUpdate[trip.stopTimeUpdate.length-1].stopId).toUpperCase() != gtfsRes.getStaticDepartureDestinationName(tripId)[1].toUpperCase();
 }
 
 async function getTripInfo(tripId) {
@@ -245,7 +245,7 @@ async function getTripInfo(tripId) {
             return [];
         }
     }
-    
+
     return data;
 }
 
@@ -274,20 +274,23 @@ async function getTripUpdateData(stopDatas) {
         ) {  
             return;
         }
-        //console.log(stopDatas, entity.tripUpdate.trip.routeId)
-        //console.log(entity.tripUpdate);
     
         entity.tripUpdate.stopTimeUpdate.forEach(stopTime => {
             // The vehicle is proceeding in accordance with its static schedule of stops, although not necessarily according to the times of the schedule. 
-           // console.log(stopTime);
-            
-           // console.log(stopTime.departure.time.toString(), Math.floor(new Date().getTime() / 1000).toString());
             if(stopTime.scheduleRelationship == 0
                 && stopDatas[0][stopTime.stopId] != undefined
                 && stopTime.departure.time.toString() - Math.floor(new Date().getTime() / 1000).toString() >= 0) { 
                     
+                let destinationStopName = gtfsRes.getStopName(getTripHeadsigneStopId(entity.tripUpdate.stopTimeUpdate));
+                let departureStopName = gtfsRes.getStopName(getTripDepartureStopId(entity.tripUpdate.stopTimeUpdate));
+
+                if(departureStopName == destinationStopName) {
+                    destinationStopName += " " + (entity.tripUpdate.trip.directionId == 0?"A":"B");
+                }
+                console.log(entity.tripUpdate);
+                
                 data.push({
-                    trip_headsign: gtfsRes.getStopName(getTripHeadsigneStopId(entity.tripUpdate.stopTimeUpdate)),
+                    trip_headsign: destinationStopName,
                     departure_time: stopTime.departure.time.toString(),
                     route_short_name: entity.tripUpdate.trip.routeId.split('-')[1],
                     vehicle_id: (entity.tripUpdate.vehicle!=null?entity.tripUpdate.vehicle.id:null),
@@ -314,6 +317,15 @@ async function getTripUpdateData(stopDatas) {
 
 function getTripHeadsigneStopId(stopTimeUpdate) {
     for(let i = stopTimeUpdate.length-1; i >= 0; i--) {        
+        if(stopTimeUpdate[i].scheduleRelationship == 0) {
+            return stopTimeUpdate[i].stopId;
+        }
+    }
+    return undefined;
+}
+
+function getTripDepartureStopId(stopTimeUpdate) {
+    for(let i = 0; i < stopTimeUpdate.length; i++) {        
         if(stopTimeUpdate[i].scheduleRelationship == 0) {
             return stopTimeUpdate[i].stopId;
         }
