@@ -89,7 +89,7 @@ function getAllStops() {
 }
 
 async function getDirectionsAndLines(stopName) {
-	let stop = {lines: DIRECTIONS[stopName]["lines"]}
+	let stop = {}
     let trip = await getLastTripUpdate();
 
     if(trip == undefined) {
@@ -99,8 +99,10 @@ async function getDirectionsAndLines(stopName) {
     let stopIds = gtfsRes.getStopIds(stopName);
     
     let destNames = [];
+    let lineNames = [];
     for(let entity of trip.entity) {  
         let ok = false;      
+
         for(let st of entity.tripUpdate.stopTimeUpdate) {
             if(stopIds.includes(st.stopId)) {
                 ok = true;
@@ -114,11 +116,18 @@ async function getDirectionsAndLines(stopName) {
         if(id == undefined)
             continue;
 
+        let lineName = entity.tripUpdate.trip.routeId;
+        lineName = lineName.split("-")[1];
+        if(!lineNames.includes(lineName))
+            lineNames.push(lineName);
+
         let name = gtfsRes.getStopName(id.stopId);
         if(!destNames.includes(name))
             destNames.push(name)
     }
     stop["directions"] = destNames;   
+    stop["lines"] = lineNames;
+     
     return stop;
 }
 
