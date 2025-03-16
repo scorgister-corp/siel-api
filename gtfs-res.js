@@ -158,6 +158,17 @@ function getServiceId(tripID) {
         return TRIPS[tripID].service_id
 }
 
+function getAllStops() {
+    let stops = [];
+
+    for(let s of Object.values(STOPS)) {
+        if(!stops.includes(s.stop_name))
+            stops.push(s.stop_name);
+        
+    }    
+    return stops;
+}
+
 function getOtherTripIds(exculdeIds, deepSec, stopDatas, serviceIds) {
     let todayTrip = getTodayTrips();
 
@@ -250,5 +261,6 @@ module.exports = {
     getTripColor,
     getTrip,
     getStaticDepartureDestinationName,
-    getServiceId
+    getServiceId,
+    getAllStops
 };

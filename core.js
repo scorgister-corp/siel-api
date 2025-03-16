@@ -81,11 +81,9 @@ async function getLastVehiculePosition() {
 /** ---- **/
 
 function getAllStops() {
-    let allStop = ALL_DATA.map(objet => objet.stop_name);
-    allStop = [...new Set(allStop)];
-
-    allStop.sort();
-    return allStop;
+    let stops = gtfsRes.getAllStops();
+    stops.sort();
+    return stops;
 }
 
 async function getDirectionsAndLines(stopName) {
@@ -95,14 +93,14 @@ async function getDirectionsAndLines(stopName) {
     if(trip == undefined) {
         return {directions: [], lines: []};
     }
-
+    
     let stopIds = gtfsRes.getStopIds(stopName);
     
     let destNames = [];
     let lineNames = [];
-    for(let entity of trip.entity) {  
-        let ok = false;      
-
+    for(let entity of trip.entity) {
+        let ok = false;
+        
         for(let st of entity.tripUpdate.stopTimeUpdate) {
             if(stopIds.includes(st.stopId)) {
                 ok = true;
@@ -125,6 +123,7 @@ async function getDirectionsAndLines(stopName) {
         if(!destNames.includes(name))
             destNames.push(name)
     }
+
     stop["directions"] = destNames;   
     stop["lines"] = lineNames;
      
