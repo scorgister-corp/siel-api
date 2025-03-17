@@ -198,7 +198,7 @@ async function isTheoreticalTrip(tripId) {
     if(trip == undefined)
         return true;
 
-    return trip.stopTimeUpdate.length <= 1 || getStopName(trip.stopTimeUpdate[trip.stopTimeUpdate.length-1].stopId).toUpperCase() != gtfsRes.getStaticDepartureDestinationName(tripId)[1].toUpperCase();
+    return trip.stopTimeUpdate.length <= 1 || (gtfsRes.getStaticDepartureDestinationName(tripId) != undefined && getStopName(trip.stopTimeUpdate[trip.stopTimeUpdate.length-1].stopId).toUpperCase() != gtfsRes.getStaticDepartureDestinationName(tripId)[1].toUpperCase());
 }
 
 async function getTripInfo(tripId) {
