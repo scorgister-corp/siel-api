@@ -286,26 +286,27 @@ async function getTripUpdateData(stopDatas) {
         entity.tripUpdate.stopTimeUpdate.forEach(stopTime => {
             // The vehicle is proceeding in accordance with its static schedule of stops, although not necessarily according to the times of the schedule. 
             if(stopTime.scheduleRelationship == 0
-                && stopDatas[0][stopTime.stopId] != undefined
-                && stopTime.departure.time.toString() - Math.floor(new Date().getTime() / 1000).toString() >= 0) { 
+                && stopDatas[0][stopTime.stopId] != undefined) {
+                if(stopTime.departure.time.toString() - Math.floor(new Date().getTime() / 1000).toString() >= 0) { 
                     
-                let destinationStopName = gtfsRes.getStopName(getTripHeadsigneStopId(entity.tripUpdate.stopTimeUpdate));
-                let departureStopName = gtfsRes.getStopName(getTripDepartureStopId(entity.tripUpdate.stopTimeUpdate));
+                    let destinationStopName = gtfsRes.getStopName(getTripHeadsigneStopId(entity.tripUpdate.stopTimeUpdate));
+                    let departureStopName = gtfsRes.getStopName(getTripDepartureStopId(entity.tripUpdate.stopTimeUpdate));
 
-                if(departureStopName == destinationStopName) {
-                    destinationStopName += " " + (entity.tripUpdate.trip.directionId == 0?"A":"B");
-                }
-                
-                data.push({
-                    trip_headsign: destinationStopName,
-                    departure_time: stopTime.departure.time.toString(),
-                    route_short_name: entity.tripUpdate.trip.routeId.split('-')[1],
-                    vehicle_id: (entity.tripUpdate.vehicle!=null?entity.tripUpdate.vehicle.id:null),
-                    trip_id: entity.tripUpdate.trip.tripId,
-                    trip_color: gtfsRes.getTripColor(entity.tripUpdate.trip.tripId),
-                    theoretical: false
-                });
-                tripIds.push(entity.tripUpdate.trip.tripId);                
+                    if(departureStopName == destinationStopName) {
+                        destinationStopName += " " + (entity.tripUpdate.trip.directionId == 0?"A":"B");
+                    }
+                    
+                    data.push({
+                        trip_headsign: destinationStopName,
+                        departure_time: stopTime.departure.time.toString(),
+                        route_short_name: entity.tripUpdate.trip.routeId.split('-')[1],
+                        vehicle_id: (entity.tripUpdate.vehicle!=null?entity.tripUpdate.vehicle.id:null),
+                        trip_id: entity.tripUpdate.trip.tripId,
+                        trip_color: gtfsRes.getTripColor(entity.tripUpdate.trip.tripId),
+                        theoretical: false
+                    });
+                }          
+                tripIds.push(entity.tripUpdate.trip.tripId);      
             }
             
         });
