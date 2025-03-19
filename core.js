@@ -137,7 +137,6 @@ async function getDirectionsAndLines(stopName) {
 
     stop.directions.sort((a, b) => a.localeCompare(b));
     stop.lines.sort((a, b) => {
-        console.log(a, b);
         if(parseInt(a) < parseInt(b)) return -1;
         else if(parseInt(a) > parseInt(b)) return 1
 
