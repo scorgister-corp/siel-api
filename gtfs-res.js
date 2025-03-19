@@ -6,6 +6,7 @@ const TRIPS = require("./gtfs/trips.json");
 
 function getTodayServices() {
     let date = getTodayDate();
+    
     const data = [];
 
     for(let d of CALENDAR_DATES) {
@@ -47,6 +48,9 @@ function getTripStopTime(tripId, stopId) {
 
 function getTodayDate() {
     let date = new Date();
+    if(date.getHours() < 3) {
+        date.setHours(-24);
+    }
     let m = (date.getMonth() + 1).toString();
     if(m.length == 1)
         m = "0" + m;
@@ -134,6 +138,7 @@ function getStaticLine(tripId) {
             vehicle_id: null,
             trip_id: tripId,
             route_short_name: TRIPS[tripId].trip_short_name,
+            trip_color: getTripColor(tripId),
             schedule_relationship: 0,
             theoretical: true
         });
@@ -169,17 +174,56 @@ function getAllStops() {
     return stops;
 }
 
-function getOtherTripIds(exculdeIds, deepSec, stopDatas, serviceIds) {
+function getOtherDestinationsAndLines(stopName, deepSec) {
     let todayTrip = getTodayTrips();
+    let serviceIds = [];
+    let stopIds = getStopIds(stopName);
+    const dests = [];
+    const lines = [];
+    
+    getTodayServices().forEach(e => {
+        serviceIds.push(e.service_id);
+    });
+
+    let n = new Date();
+    for(let tt of todayTrip) {
+        for(let sti of stopIds) {
+            if(TRIPS[tt.trip_id] && serviceIds.includes(TRIPS[tt.trip_id].service_id)) {  
+                if(STOP_TIMES[tt.trip_id][sti]) {
+                    let h = STOP_TIMES[tt.trip_id][sti].split(":")[0], m = STOP_TIMES[tt.trip_id][sti].split(":")[1], s = STOP_TIMES[tt.trip_id][sti].split(":")[2];
+                    let c = createDate(h, m, s);
+                    
+                    let depDestName = getStaticDepartureDestinationName(tt.trip_id);
+                    if(c.getTime() >= n.getTime() && c.getTime() - n.getTime() <= deepSec) {
+                        if(!dests.includes(depDestName[1]))
+                            dests.push(depDestName[1]);
+                        if(!lines.includes(tt.trip_short_name))
+                            lines.push(tt.trip_short_name);
+                        
+                    }
+                }
+            }
+        }
+    }
+    return {"directions": dests, "lines": lines};
+}
+
+function getOtherTripIds(exculdeIds, deepSec, stopDatas) {
+    let todayTrip = getTodayTrips();
+    let serviceIds = [];
+    getTodayServices().forEach(e => {
+        serviceIds.push(e.service_id);
+    });
 
     const datas = [];
 
     let n = new Date();
 
     for(let tt of todayTrip) {
-        for(let sti of Object.keys(stopDatas[0])) {
+        for(let sti of Object.keys(stopDatas[0])) {            
             if(TRIPS[tt.trip_id] && serviceIds.includes(TRIPS[tt.trip_id].service_id)) {  
                 let depDestName = getStaticDepartureDestinationName(tt.trip_id);
+                
                 if(STOP_TIMES[tt.trip_id][sti]
                     && !exculdeIds.includes(tt.trip_id) && !datas.includes(tt.trip_id)
                     && stopDatas[1].includes(TRIPS[tt.trip_id].trip_short_name)
@@ -262,5 +306,6 @@ module.exports = {
     getTrip,
     getStaticDepartureDestinationName,
     getServiceId,
-    getAllStops
+    getAllStops,
+    getOtherDestinationsAndLines
 };

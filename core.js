@@ -87,9 +87,10 @@ function getAllStops() {
 }
 
 async function getDirectionsAndLines(stopName) {
-	let stop = {}
+	let stop = {};
     let trip = await getLastTripUpdate();
-
+    stop = gtfsRes.getOtherDestinationsAndLines(stopName, 3600000);
+    
     if(trip == undefined) {
         return {directions: [], lines: []};
     }
@@ -124,9 +125,17 @@ async function getDirectionsAndLines(stopName) {
             destNames.push(name)
     }
 
-    stop["directions"] = destNames;   
-    stop["lines"] = lineNames;
-     
+    //let otherTrip = gtfsRes.getOtherTripIds([], 3600000, )
+    for(let des of destNames) {
+        if(!stop.directions.includes(des))
+            stop.directions.push(des);
+    }
+
+    for(let li of lineNames) {
+        if(!stop.lines.includes(li))
+            stop.lines.push(li);
+    }
+    
     return stop;
 }
 
@@ -259,7 +268,7 @@ async function getTripInfo(tripId) {
 
 async function getTripUpdateData(stopDatas) {
     let tripUpdate = await getLastTripUpdate();
-    
+
     if(tripUpdate == undefined)
         return null;
     
@@ -314,7 +323,7 @@ async function getTripUpdateData(stopDatas) {
     });
     
     
-    const otherData = gtfsRes.getOtherTripIds(tripIds, 3600000, stopDatas, serviceIds);
+    const otherData = gtfsRes.getOtherTripIds(tripIds, 3600000, stopDatas);    
     for(let oD of otherData)
         data.push(oD);
     
