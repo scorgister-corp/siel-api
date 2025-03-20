@@ -227,7 +227,7 @@ async function getTripInfo(tripId) {
     if(!(await isTheoreticalTrip(tripId))) {
         if(trip == undefined)
             return null;
-
+        
         trip.stopTimeUpdate.forEach(elt => {
             var stopName = getStopName(elt.stopId);
 
@@ -257,7 +257,7 @@ async function getTripInfo(tripId) {
                 trip_color: gtfsRes.getTripColor(trip.trip.tripId),
                 schedule_relationship: elt.scheduleRelationship,
                 theoretical: false
-            });
+            });            
             stops.push(stopName);
         });
     }else {
@@ -266,7 +266,12 @@ async function getTripInfo(tripId) {
 
     if(data && data.length > 0) {
         let now = new Date();
-        if(data[data.length-1].departure_time - Math.floor(now.getTime() / 1000) + 60 < 0) {
+        let lastStop = data.length - 1;
+        while(lastStop >= 0 && data[lastStop].schedule_relationship != 0) {
+            lastStop--;
+        }
+
+        if(data[lastStop].schedule_relationship != 0 || data[lastStop].departure_time - Math.floor(now.getTime() / 1000) + 60 < 0) {            
             return [];
         }
     }
@@ -298,7 +303,7 @@ async function getTripUpdateData(stopDatas) {
             || !stopDatas[2].includes(getStopName(entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1].stopId).toUpperCase())
         ) {  
             return;
-        }
+        }        
     
         entity.tripUpdate.stopTimeUpdate.forEach(stopTime => {
             // The vehicle is proceeding in accordance with its static schedule of stops, although not necessarily according to the times of the schedule. 
