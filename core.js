@@ -328,8 +328,8 @@ async function getTripUpdateData(stopDatas) {
                         theoretical: false
                     });
                 }          
-                tripIds.push(entity.tripUpdate.trip.tripId);      
             }
+            tripIds.push(entity.tripUpdate.trip.tripId);      
             
         });
         
