@@ -212,10 +212,15 @@ function getStopName(stopId) {
 
 async function isTheoreticalTrip(tripId) {
     let trip = await getTripUpdate(tripId);
+    return isTheorical(trip, tripId);
+}
+
+function isTheorical(trip, tripId) {
     if(trip == undefined)
         return true;
-
-    return trip.stopTimeUpdate.length <= 1 || (gtfsRes.getStaticDepartureDestinationName(tripId) != undefined && getStopName(trip.stopTimeUpdate[trip.stopTimeUpdate.length-1].stopId).toUpperCase() != gtfsRes.getStaticDepartureDestinationName(tripId)[1].toUpperCase());
+    
+    let stopName = getStopName(trip.stopTimeUpdate[trip.stopTimeUpdate.length-1].stopId);
+    return trip.stopTimeUpdate.length <= 1 || (gtfsRes.getStaticDepartureDestinationName(tripId) != undefined && stopName !== undefined && stopName.toUpperCase() != gtfsRes.getStaticDepartureDestinationName(tripId)[1].toUpperCase());
 }
 
 async function getTripInfo(tripId) {
@@ -286,15 +291,10 @@ async function getTripUpdateData(stopDatas) {
         return null;
     
     let data = [];
-    let serviceIds = [];
     
     let tripIds = [];
     tripUpdate.entity.forEach(entity => {
-        let sId = gtfsRes.getServiceId(entity.tripUpdate.trip.tripId);
-        
-        if(!serviceIds.includes(sId))
-            serviceIds.push(sId);
-
+    
         if(entity.tripUpdate.trip.scheduleRelationship == 3 || entity.tripUpdate.stopTimeUpdate.length == 0) {
             return;
         }
@@ -303,7 +303,11 @@ async function getTripUpdateData(stopDatas) {
             || !stopDatas[2].includes(getStopName(entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1].stopId).toUpperCase())
         ) {  
             return;
-        }        
+        }
+        
+        if(isTheorical(entity.tripUpdate, entity.tripUpdate.trip.tripId)) {
+            return;
+        }
     
         entity.tripUpdate.stopTimeUpdate.forEach(stopTime => {
             // The vehicle is proceeding in accordance with its static schedule of stops, although not necessarily according to the times of the schedule. 
