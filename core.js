@@ -203,13 +203,6 @@ function getStopDatas(stopName, directions, lines) {
     return [datas, lines, directions];
 }
 
-function getStopName(stopId) {
-    for(let i = 0; i < ALL_DATA.length; i++)
-        if(ALL_DATA[i].stop_id.includes(stopId))
-            return ALL_DATA[i].stop_name;
-    return undefined;
-}
-
 async function isTheoreticalTrip(tripId) {
     let trip = await getTripUpdate(tripId);
     return isTheorical(trip, tripId);
@@ -219,7 +212,7 @@ function isTheorical(trip, tripId) {
     if(trip == undefined || trip.stopTimeUpdate.length == 0)
         return true;
     
-    let stopName = getStopName(trip.stopTimeUpdate[trip.stopTimeUpdate.length-1].stopId);
+    let stopName = gtfsRes.getStopName(trip.stopTimeUpdate[trip.stopTimeUpdate.length-1].stopId);
     return trip.stopTimeUpdate.length <= 1 || (gtfsRes.getStaticDepartureDestinationName(tripId) != undefined && stopName !== undefined && stopName.toUpperCase() != gtfsRes.getStaticDepartureDestinationName(tripId)[1].toUpperCase());
 }
 
@@ -232,14 +225,16 @@ async function getTripInfo(tripId) {
     if(!(await isTheoreticalTrip(tripId))) {
         if(trip == undefined)
             return null;
+
+        let tmpData = [];
         
         trip.stopTimeUpdate.forEach(elt => {
-            var stopName = getStopName(elt.stopId);
-
-            if(stopName == undefined || (elt.scheduleRelationship != 0 && stops.includes(stopName))) {
+            var stopName = gtfsRes.getStopName(elt.stopId);
+            
+            if(stopName == undefined) {
                 return;
             }
-
+ 
             let stationState = -1;
             let departureTime = "0";
             if(elt.scheduleRelationship == 0) {
@@ -250,9 +245,10 @@ async function getTripInfo(tripId) {
                     stationState = 1;
 
                 departureTime = elt.departure.time.toString();
+                stops.push(stopName);
             }
-
-            data.push({
+            
+            tmpData.push({
                 departure_time: departureTime,
                 station_name: stopName,
                 state: stationState,
@@ -262,9 +258,19 @@ async function getTripInfo(tripId) {
                 trip_color: gtfsRes.getTripColor(trip.trip.tripId),
                 schedule_relationship: elt.scheduleRelationship,
                 theoretical: false
-            });            
-            stops.push(stopName);
+            });
+         
         });
+                
+        for(let d of tmpData) {
+            if(d.schedule_relationship != 0 && stops.includes(d.station_name)) {
+                continue;
+            }
+            
+            data.push(d);
+            stops.push(d.station_name);
+        }
+
     }else {
         data = gtfsRes.getStaticLine(tripId);
 
@@ -279,7 +285,9 @@ async function getTripInfo(tripId) {
         while(lastStop >= 0 && data[lastStop].schedule_relationship != 0) {
             lastStop--;
         }
-
+        if(lastStop < 0)
+            return [];
+        
         if(data[lastStop].schedule_relationship != 0 || data[lastStop].departure_time - Math.floor(now.getTime() / 1000) + 60 < 0) {            
             return [];
         }
@@ -304,7 +312,7 @@ async function getTripUpdateData(stopDatas) {
         }
 
         if(!stopDatas[1].includes(entity.tripUpdate.trip.routeId.split('-')[1])
-            || !stopDatas[2].includes(getStopName(entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1].stopId).toUpperCase())
+            || !stopDatas[2].includes(gtfsRes.getStopName(entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1].stopId).toUpperCase())
         ) {  
             return;
         }
