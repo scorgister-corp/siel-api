@@ -404,7 +404,7 @@ async function getAlerts(lines) {
     alerts.entity.forEach(alert => {      
         let conti = false;
         let routeId = 0;
-        
+
         for(let entity of alert.alert.informedEntity) {            
             let rId = entity.routeId.substring(entity.routeId.indexOf("-") + 1, entity.routeId.length);
             
