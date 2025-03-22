@@ -216,7 +216,7 @@ async function isTheoreticalTrip(tripId) {
 }
 
 function isTheorical(trip, tripId) {
-    if(trip == undefined)
+    if(trip == undefined || trip.stopTimeUpdate.length == 0)
         return true;
     
     let stopName = getStopName(trip.stopTimeUpdate[trip.stopTimeUpdate.length-1].stopId);
@@ -256,7 +256,7 @@ async function getTripInfo(tripId) {
                 departure_time: departureTime,
                 station_name: stopName,
                 state: stationState,
-                vehicle_id: (trip.vehicle!=null?trip.vehicle.id:null),
+                vehicle_id: getVehiculeId(trip),
                 trip_id: trip.trip.tripId,
                 route_short_name: trip.trip.routeId.split('-')[1],
                 trip_color: gtfsRes.getTripColor(trip.trip.tripId),
@@ -267,6 +267,10 @@ async function getTripInfo(tripId) {
         });
     }else {
         data = gtfsRes.getStaticLine(tripId);
+
+        for(let d of data)
+            if(d.theoretical)
+                d.vehicle_id = getVehiculeId(await getTripUpdate(d.trip_id));
     }
 
     if(data && data.length > 0) {
@@ -326,7 +330,7 @@ async function getTripUpdateData(stopDatas) {
                         trip_headsign: destinationStopName,
                         departure_time: stopTime.departure.time.toString(),
                         route_short_name: entity.tripUpdate.trip.routeId.split('-')[1],
-                        vehicle_id: (entity.tripUpdate.vehicle!=null?entity.tripUpdate.vehicle.id:null),
+                        vehicle_id: getVehiculeId(entity.tripUpdate),
                         trip_id: entity.tripUpdate.trip.tripId,
                         trip_color: gtfsRes.getTripColor(entity.tripUpdate.trip.tripId),
                         theoretical: false
@@ -341,12 +345,25 @@ async function getTripUpdateData(stopDatas) {
     
     
     const otherData = gtfsRes.getOtherTripIds(tripIds, 3600000, stopDatas);    
-    for(let oD of otherData)
+    for(let oD of otherData) {
+        if(oD.theoretical)
+            oD.vehicle_id = getVehiculeId(await getTripUpdate(oD.trip_id));
         data.push(oD);
+    }
     
     data.sort((a, b) => a.departure_time.localeCompare(b.departure_time));
 
     return data;
+}
+
+function getVehiculeId(trip) {
+    
+    if(trip == undefined)
+        return null;
+    
+    if(trip.vehicle != undefined)
+        return trip.vehicle.id;
+    return null;
 }
 
 function getTripHeadsigneStopId(stopTimeUpdate) {
