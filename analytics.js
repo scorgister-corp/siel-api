@@ -43,7 +43,8 @@ function choose(req, uid, time, data) {
 
 function tripInfo(req, uid, time, data) {
     let userObject = getUserObject(req, uid);
-    if(data.length == 0 || userObject.infos[data[0].trip_id] != undefined) {
+    
+    if(data == undefined || data.length == 0 || userObject.infos[data[0].trip_id] != undefined) {
         return;
     }
 
