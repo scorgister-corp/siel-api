@@ -1,6 +1,4 @@
 const GtfsRealtimeBindings = require('gtfs-realtime-bindings');
-const ALL_DATA = require('./merged_data.json');
-const DIRECTIONS = require('./directions.json');
 const INFOS = require('./infos.json');
 const gtfsRes = require("./gtfs-res");
 
@@ -246,7 +244,7 @@ async function getTripInfo(tripId) {
 
                 departureTime = elt.departure.time.toString();
                 stops.push(stopName);
-            }
+            }            
             
             tmpData.push({
                 departure_time: departureTime,
@@ -257,6 +255,7 @@ async function getTripInfo(tripId) {
                 route_short_name: trip.trip.routeId.split('-')[1],
                 trip_color: gtfsRes.getTripColor(trip.trip.tripId),
                 schedule_relationship: elt.scheduleRelationship,
+                direction_id: trip.trip.directionId?.toString(),
                 theoretical: false
             });
          

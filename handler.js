@@ -26,6 +26,7 @@ class Handler {
     }
 }
 
+
 function createHandler(app, defaultMethodNotAllowedHandler) {
     return new Handler(app, defaultMethodNotAllowedHandler);
 }

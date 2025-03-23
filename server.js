@@ -1,10 +1,10 @@
 const express = require('express');
-const handler = require('./handler')
-//const utils = require('./utils.js');
-const core = require('./core.js');
-const fs = require('fs');
+const handler = require('./handler');
+const analytics = require('./analytics');
 
-const VERSION = "1.2.0"
+const core = require('./core.js');
+
+const VERSION = "1.2.1"
 
 
 const app = express();
@@ -12,26 +12,9 @@ app.use(express.json());
 app.use(express.urlencoded())
 const handlers = handler(app, defaultMethodNotAllowedHandler);
 
-app.options("*", (req, res) => {
+app.options("*", (req, res) => {    
     send(res, {});
 });
-
-/*
-handlers.post("/analyse", (req, res) => {   
-    var currentData = []; 
-    if(fs.existsSync("./datas.json")) {
-        currentData = JSON.parse(fs.readFileSync("./datas.json"));
-    }
-
-    for(var i = 0; i < req.body.length; i++)
-        currentData.push(req.body[i]);
-    
-    fs.writeFileSync("./datas.json", JSON.stringify(currentData));
-    
-
-    send(res, {});
-});
-*/
 
 handlers.post("/info", (req, res) => {    
     if(req.body["vehicule_id"] == undefined) {
@@ -39,13 +22,23 @@ handlers.post("/info", (req, res) => {
         return;
     }
 
-    core.getVehiculeInfo(req.body["vehicule_id"]).then(e => {
+    let vehiculeId = req.body["vehicule_id"];
+
+    core.getVehiculeInfo(vehiculeId).then(e => {
+        analytics.analyse(req, analytics.ACTION.VEHICULE_INFO, e);
+        
         send(res, e);
     });
 });
 
-handlers.get("/trip", (req, res) => {    
+handlers.get("/trip", (req, res) => {
+    if(req.query["tripid"] == undefined) {
+        send400(res);
+        return;
+    }
+
     core.getTripInfo(req.query["tripid"]).then(e => {
+        analytics.analyse(req, analytics.ACTION.TRIP_INFO, e);
         send(res, e);
     });
 });
@@ -56,6 +49,16 @@ handlers.get("/version", (req, res) => {
 
 handlers.get("/stops", (req, res) => {
     send(res, core.getAllStops());
+});
+
+handlers.post("/choose", async (req, res) => {
+    if(req.body["stop_name"] == undefined || req.body["direction"] == undefined || req.body["line"] == undefined) {
+        send400(res);
+        return;
+    }
+
+    analytics.analyse(req, analytics.ACTION.CHOOSE, [req.body["stop_name"], req.body["direction"], req.body["line"]]);
+    send(res, {}, 200);
 });
 
 
@@ -82,12 +85,14 @@ handlers.post("/alert", async (req, res) => {
 });
 
 
-handlers.post("/stopdata", async (req, res) => {
+handlers.post("/stopdata", async (req, res) => {    
     if(req.body["stop_name"] == undefined) {
         send400(res);
         return;
     }
-    core.getDirectionsAndLines(req.body["stop_name"]).then(e => {
+
+    let stopName = req.body["stop_name"];
+    core.getDirectionsAndLines(stopName).then(e => {
         send(res, e);
     });
 });
@@ -132,7 +137,7 @@ function send(res, body, code=200) {
     res.status(code);
     res.set("Access-Control-Allow-Origin", "*");
     res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Allow-Headers", "Content-Type, X-Application-UID");
     res.json(body);
 }
 

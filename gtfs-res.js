@@ -140,6 +140,7 @@ function getStaticLine(tripId) {
             route_short_name: TRIPS[tripId].trip_short_name,
             trip_color: getTripColor(tripId),
             schedule_relationship: 0,
+            direction_id: -1,
             theoretical: true
         });
     }
