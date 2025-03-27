@@ -77,6 +77,9 @@ function getStopIds(stopName) {
 }
 
 function getStopName(stopId) {
+    if(STOPS[stopId] == undefined)
+        return undefined;
+    
     return STOPS[stopId].stop_name;
 }
 
@@ -137,6 +140,7 @@ function getStaticLine(tripId) {
             state: stationState,
             vehicle_id: null,
             trip_id: tripId,
+            route_id: TRIPS[tripId].route_id,
             route_short_name: TRIPS[tripId].trip_short_name,
             trip_color: getTripColor(tripId),
             schedule_relationship: 0,
@@ -179,8 +183,8 @@ function getOtherDestinationsAndLines(stopName, deepSec) {
     let todayTrip = getTodayTrips();
     let serviceIds = [];
     let stopIds = getStopIds(stopName);
-    const dests = [];
-    const lines = [];
+
+    let data = {};
     
     getTodayServices().forEach(e => {
         serviceIds.push(e.service_id);
@@ -195,21 +199,28 @@ function getOtherDestinationsAndLines(stopName, deepSec) {
                     let c = createDate(h, m, s);
                     
                     let depDestName = getStaticDepartureDestinationName(tt.trip_id);
-                    if(c.getTime() >= n.getTime() && c.getTime() - n.getTime() <= deepSec) {
-                        if(!dests.includes(depDestName[1]))
-                            dests.push(depDestName[1]);
-                        if(!lines.includes(tt.trip_short_name))
-                            lines.push(tt.trip_short_name);
+                    if(c.getTime() >= n.getTime() && c.getTime() - n.getTime() <= deepSec * 1000) {
+                        if(!Object.keys(data).includes(depDestName[1]))
+                            data[depDestName[1]] = [];
                         
+                        let ok = true;
+                        for(let directionData of data[depDestName[1]]) {
+                            if(directionData.id == tt.route_id) {
+                                ok = false;
+                                break;
+                            }
+                        }
+                        if(ok)
+                            data[depDestName[1]].push({id: tt.route_id, short_name: getRouteShortName(tt.route_id), long_name: getRouteLongName(tt.route_id)});
                     }
                 }
             }
         }
     }
-    return {"directions": dests, "lines": lines};
+    return data;
 }
 
-function getOtherTripIds(exculdeIds, deepSec, stopDatas) {
+function getOtherTripIds(exculdeIds, deepSec, stopDatas) {    
     let todayTrip = getTodayTrips();
     let serviceIds = [];
     getTodayServices().forEach(e => {
@@ -224,30 +235,44 @@ function getOtherTripIds(exculdeIds, deepSec, stopDatas) {
         for(let sti of Object.keys(stopDatas[0])) {            
             if(TRIPS[tt.trip_id] && serviceIds.includes(TRIPS[tt.trip_id].service_id)) {  
                 let depDestName = getStaticDepartureDestinationName(tt.trip_id);
+
+                if(STOP_TIMES[tt.trip_id][sti] === undefined 
+                    || exculdeIds.includes(tt.trip_id) || datas.includes(tt.trip_id)) {
+                    continue;
+                }
                 
-                if(STOP_TIMES[tt.trip_id][sti]
-                    && !exculdeIds.includes(tt.trip_id) && !datas.includes(tt.trip_id)
-                    && stopDatas[1].includes(TRIPS[tt.trip_id].trip_short_name)
-                    && stopDatas[2].includes(depDestName[1].toUpperCase())
-                ) {
-                    if(depDestName[0].toUpperCase() == depDestName[1].toUpperCase()) {
-                        depDestName[1] += " " + (TRIPS[tt.trip_id].direction_id == 0?"A":"B");
+                let ok = false;
+                for(let routeId in stopDatas[1]) {
+                    
+                    if(routeId == TRIPS[tt.trip_id].route_id
+                        && stopDatas[1][routeId].includes(depDestName[1].toUpperCase())
+                    ) {  
+                        ok = true;
+                        break;
                     }
+                }
+                
+                if(!ok)
+                   continue;
+               
+                if(depDestName[0].toUpperCase() == depDestName[1].toUpperCase()) {
+                    depDestName[1] += " " + (TRIPS[tt.trip_id].direction_id == 0?"A":"B");
+                }
+                
+                let h = STOP_TIMES[tt.trip_id][sti].split(":")[0], m = STOP_TIMES[tt.trip_id][sti].split(":")[1], s = STOP_TIMES[tt.trip_id][sti].split(":")[2];
+                let c = createDate(h, m, s);
 
-                    let h = STOP_TIMES[tt.trip_id][sti].split(":")[0], m = STOP_TIMES[tt.trip_id][sti].split(":")[1], s = STOP_TIMES[tt.trip_id][sti].split(":")[2];
-                    let c = createDate(h, m, s);
-
-                    if(c.getTime() >= n.getTime() && c.getTime() - n.getTime() <= deepSec) {    
-                        datas.push({
-                            trip_headsign: depDestName[1],
-                            departure_time: c.getTime().toString().substring(0, c.getTime().toString().length - 3),
-                            route_short_name: TRIPS[tt.trip_id].trip_short_name,
-                            vehicle_id: null,
-                            trip_id: tt.trip_id,
-                            trip_color: getTripColor(tt.trip_id),
-                            theoretical: true
-                        });
-                    }
+                if(c.getTime() >= n.getTime() && c.getTime() - n.getTime() <= deepSec * 1000) {    
+                    datas.push({
+                        trip_headsign: depDestName[1],
+                        departure_time: c.getTime().toString().substring(0, c.getTime().toString().length - 3),
+                        route_short_name: getRouteShortName(tt.route_id),
+                        route_long_name: getRouteLongName(tt.route_id),
+                        vehicle_id: null,
+                        trip_id: tt.trip_id,
+                        trip_color: getTripColor(tt.trip_id),
+                        theoretical: true
+                    });
                 }
             }
         }
@@ -292,6 +317,26 @@ function createDate(h, m, s) {
     return now;
 }
 
+function getRouteId(tripId) {
+    if(TRIPS[tripId] === undefined)
+        return undefined;
+    return TRIPS[tripId].route_id;
+}
+
+function getRouteShortName(routeId) {
+    if(routeId == undefined || ROUTES[routeId] == undefined)
+        return undefined;
+
+    return ROUTES[routeId].route_short_name;
+}
+
+function getRouteLongName(routeId) {
+    if(routeId == undefined || ROUTES[routeId] == undefined)
+        return undefined;
+
+    return ROUTES[routeId].route_long_name;
+}
+
 module.exports = {
     getTodayServices,
     getTodayTrips,
@@ -308,5 +353,8 @@ module.exports = {
     getStaticDepartureDestinationName,
     getServiceId,
     getAllStops,
-    getOtherDestinationsAndLines
+    getOtherDestinationsAndLines,
+    getRouteId,
+    getRouteShortName,
+    getRouteLongName
 };

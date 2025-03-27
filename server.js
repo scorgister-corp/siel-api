@@ -47,28 +47,32 @@ handlers.get("/version", (req, res) => {
     send(res, {version: VERSION});
 });
 
+handlers.get("/clientinfos", (req, res) => {
+    send(res, core.getClientInfos());
+});
+
 handlers.get("/stops", (req, res) => {
     send(res, core.getAllStops());
 });
 
 handlers.post("/choose", async (req, res) => {
-    if(req.body["stop_name"] == undefined || req.body["direction"] == undefined || req.body["line"] == undefined) {
+    if(req.body["stop_name"] == undefined || req.body["directions"] == undefined) {
         send400(res);
         return;
     }
 
-    analytics.analyse(req, analytics.ACTION.CHOOSE, [req.body["stop_name"], req.body["direction"], req.body["line"]]);
+    analytics.analyse(req, analytics.ACTION.CHOOSE, [req.body["stop_name"], req.body["directions"]]);
     send(res, {}, 200);
 });
 
 
 handlers.post("/data", async (req, res) => {
-    if(req.body["stop_name"] == undefined || req.body["direction"] == undefined || req.body["line"] == undefined) {
+    if(req.body["stop_name"] == undefined || req.body["directions"] == undefined) {
         send400(res);
         return;
     }
     
-    core.getUpdate(req.body["stop_name"], req.body["direction"], req.body["line"]).then(e => {
+    core.getUpdate(req.body["stop_name"], req.body["directions"]).then(e => {
         send(res, e);
     });
 });

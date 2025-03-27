@@ -1,6 +1,7 @@
 const GtfsRealtimeBindings = require('gtfs-realtime-bindings');
 const INFOS = require('./infos.json');
 const gtfsRes = require("./gtfs-res");
+const env = require("./env");
 
 var tripUpdateFeed = undefined;
 var tripLastUpdate = undefined;
@@ -10,6 +11,8 @@ var alertLastUpdate = undefined;
 
 var vehicleFeed = undefined;
 var vehiculeLastUpdate = undefined;
+
+const ENV = env.loadFile("./.env");
 
 async function getGTFSData(url) {
     let response = null;
@@ -38,15 +41,15 @@ async function getGTFSData(url) {
 }
 
 async function getGTFSTripUpdate() {
-    return getGTFSData('https://data.montpellier3m.fr/TAM_MMM_GTFSRT/TripUpdate.pb');
+    return getGTFSData(ENV["GTFS_TRIP_UPDATE_URL"]);
 }
 
 async function getGTFSAlert() {
-    return getGTFSData('https://data.montpellier3m.fr/TAM_MMM_GTFSRT/Alert.pb');
+    return getGTFSData(ENV["GTFS_ALERT_URL"]);
 }
 
 async function getGTFSVehiculePosition() {
-    return getGTFSData('https://data.montpellier3m.fr/TAM_MMM_GTFSRT/VehiclePosition.pb');
+    return getGTFSData(ENV["GTFS_VEHICULE_POSITION_URL"]);
 }
 
 async function getLastTripUpdate() {
@@ -54,7 +57,7 @@ async function getLastTripUpdate() {
         tripUpdateFeed = await getGTFSTripUpdate();
         tripLastUpdate = new Date().getTime();
     }
-
+    
     return tripUpdateFeed;
 }
 
@@ -62,7 +65,7 @@ async function getLastAlert() {
     if(alertFeed == undefined || alertLastUpdate == undefined || new Date().getTime() - alertLastUpdate > 20 * 1000) {
         alertFeed = await getGTFSAlert();
         alertLastUpdate = new Date().getTime();
-    }
+    }    
 
     return alertFeed;
 }
@@ -81,22 +84,21 @@ async function getLastVehiculePosition() {
 function getAllStops() {
     let stops = gtfsRes.getAllStops();
     stops.sort();
+
     return stops;
 }
 
 async function getDirectionsAndLines(stopName) {
 	let stop = {};
     let trip = await getLastTripUpdate();
-    stop = gtfsRes.getOtherDestinationsAndLines(stopName, 3600000);
-    
+    stop = gtfsRes.getOtherDestinationsAndLines(stopName, ENV.THEORETICAL_DEPTH);
+
     if(trip == undefined) {
-        return {directions: [], lines: []};
+        return {};
     }
     
     let stopIds = gtfsRes.getStopIds(stopName);
     
-    let destNames = [];
-    let lineNames = [];
     for(let entity of trip.entity) {
         let ok = false;
         
@@ -106,42 +108,38 @@ async function getDirectionsAndLines(stopName) {
                 break;
             }
         }
+
         if(!ok)
             continue;
 
-        let id = entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1];
-        if(id == undefined)
+        let destStop = entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1];
+        if(destStop == undefined)
             continue;
 
-        let lineName = entity.tripUpdate.trip.routeId;
-        lineName = lineName.split("-")[1];
-        if(!lineNames.includes(lineName))
-            lineNames.push(lineName);
+        let name = gtfsRes.getStopName(destStop.stopId);
+        if(!Object.keys(stop).includes(name))
+            stop[name] = [];
 
-        let name = gtfsRes.getStopName(id.stopId);
-        if(!destNames.includes(name))
-            destNames.push(name)
+        let routeId = "";
+        if(entity.tripUpdate.trip.routeId == undefined || entity.tripUpdate.trip.routeId == "") {
+            routeId = gtfsRes.getRouteId(entity.tripUpdate.trip.tripId);
+        }else {
+            routeId = entity.tripUpdate.trip.routeId;
+        }
+
+        if(routeId != undefined) {
+            let ok = true;
+            for(let directionData of stop[name]) {
+                if(directionData.id == routeId) {
+                    ok = false;
+                    break;
+                }
+            }
+            if(ok)
+                stop[name].push({id: routeId, short_name: gtfsRes.getRouteShortName(routeId), long_name: gtfsRes.getRouteLongName(routeId)});
+        }
     }
 
-    for(let des of destNames) {
-        if(!stop.directions.includes(des))
-            stop.directions.push(des);
-    }
-
-    for(let li of lineNames) {
-        if(!stop.lines.includes(li))
-            stop.lines.push(li);
-    }
-
-    stop.directions.sort((a, b) => a.localeCompare(b));
-    stop.lines.sort((a, b) => {
-        if(parseInt(a) < parseInt(b)) return -1;
-        else if(parseInt(a) > parseInt(b)) return 1
-
-        return 0; 
-    });
-
-    
     return stop;
 }
 
@@ -162,9 +160,9 @@ async function getTripUpdate(tripId) {
     if(tripUpdate == undefined) {
         return undefined;
     }
-
+    
     for(let i = 0; i < tripUpdate.entity.length; i++) {
-		let entity = tripUpdate.entity[i];
+		let entity = tripUpdate.entity[i];        
 		if(entity.tripUpdate.trip.tripId && entity.tripUpdate.trip.tripId == tripId) {
 			return entity.tripUpdate;
 		}
@@ -189,20 +187,22 @@ async function getTripIdByVehiculeId(vehiculeId) {
  * 
  * @param {Object} stopNames 
  */
-function getStopDatas(stopName, directions, lines) {
+function getStopDatas(stopName, directions) {
     const datas = {};
     const routeIds = [];
-
-    directions = directions.map(function(x) {return x.toUpperCase();});
+    
+    for(let routeId in directions)
+        directions[routeId] = directions[routeId].map(function(x) {return x.toUpperCase();});
 
     gtfsRes.getStopIds(stopName).forEach(e => {        
         datas[e] = gtfsRes.getStopName(e)
     });
-    return [datas, lines, directions];
+    return [datas, directions];
 }
 
 async function isTheoreticalTrip(tripId) {
     let trip = await getTripUpdate(tripId);
+
     return isTheorical(trip, tripId);
 }
 
@@ -236,13 +236,18 @@ async function getTripInfo(tripId) {
             let stationState = -1;
             let departureTime = "0";
             if(elt.scheduleRelationship == 0) {
-                var t = elt.departure.time - (Date.now() / 1000);
+
+                let arrivalOrDeparture = elt.departure;
+                if(arrivalOrDeparture == undefined)
+                    arrivalOrDeparture = elt.arrival;
+
+                let  t = arrivalOrDeparture.time - (Date.now() / 1000);
                 if(t > -20 && t < 17)
                     stationState = 0;
                 else if(t > 17)
                     stationState = 1;
 
-                departureTime = elt.departure.time.toString();
+                departureTime = arrivalOrDeparture.time.toString();
                 stops.push(stopName);
             }            
             
@@ -252,7 +257,9 @@ async function getTripInfo(tripId) {
                 state: stationState,
                 vehicle_id: getVehiculeId(trip),
                 trip_id: trip.trip.tripId,
-                route_short_name: trip.trip.routeId.split('-')[1],
+                route_id: gtfsRes.getRouteId(trip.trip.tripId),
+                route_short_name: gtfsRes.getRouteShortName(gtfsRes.getRouteId(trip.trip.tripId)),
+                route_long_name: gtfsRes.getRouteLongName(gtfsRes.getRouteId(trip.trip.tripId)),
                 trip_color: gtfsRes.getTripColor(trip.trip.tripId),
                 schedule_relationship: elt.scheduleRelationship,
                 direction_id: trip.trip.directionId?.toString(),
@@ -297,7 +304,7 @@ async function getTripInfo(tripId) {
 
 async function getTripUpdateData(stopDatas) {
     let tripUpdate = await getLastTripUpdate();
-
+    
     if(tripUpdate == undefined)
         return null;
     
@@ -310,11 +317,21 @@ async function getTripUpdateData(stopDatas) {
             return;
         }
 
-        if(!stopDatas[1].includes(entity.tripUpdate.trip.routeId.split('-')[1])
-            || !stopDatas[2].includes(gtfsRes.getStopName(entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1].stopId).toUpperCase())
-        ) {  
-            return;
+        let ok = false;
+        
+        for(let routeId in stopDatas[1]) {
+            if(routeId == "empty"
+                || (entity.tripUpdate.trip.routeId != undefined && routeId == entity.tripUpdate.trip.routeId)
+                || ([undefined, ""].includes(entity.tripUpdate.trip.routeId) && routeId == gtfsRes.getRouteId(entity.tripUpdate.trip.tripId))) {
+                if(stopDatas[1][routeId].includes(gtfsRes.getStopName(entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1].stopId)?.toUpperCase())) {
+                    ok = true;
+                    break
+                }
+            }
         }
+
+        if(!ok)
+            return;
         
         if(isTheorical(entity.tripUpdate, entity.tripUpdate.trip.tripId)) {
             return;
@@ -324,7 +341,12 @@ async function getTripUpdateData(stopDatas) {
             // The vehicle is proceeding in accordance with its static schedule of stops, although not necessarily according to the times of the schedule. 
             if(stopTime.scheduleRelationship == 0
                 && stopDatas[0][stopTime.stopId] != undefined) {
-                if(stopTime.departure.time.toString() - Math.floor(new Date().getTime() / 1000).toString() >= 0) { 
+                
+                let arrivalOrDeparture = stopTime.departure;
+                if(arrivalOrDeparture == undefined)
+                    arrivalOrDeparture = stopTime.arrival;
+                
+                if(arrivalOrDeparture.time.toString() - Math.floor(new Date().getTime() / 1000).toString() >= 0) { 
                     
                     let destinationStopName = gtfsRes.getStopName(getTripHeadsigneStopId(entity.tripUpdate.stopTimeUpdate));
                     let departureStopName = gtfsRes.getStopName(getTripDepartureStopId(entity.tripUpdate.stopTimeUpdate));
@@ -335,8 +357,9 @@ async function getTripUpdateData(stopDatas) {
                     
                     data.push({
                         trip_headsign: destinationStopName,
-                        departure_time: stopTime.departure.time.toString(),
-                        route_short_name: entity.tripUpdate.trip.routeId.split('-')[1],
+                        departure_time: arrivalOrDeparture.time.toString(),
+                        route_long_name: gtfsRes.getRouteShortName(gtfsRes.getRouteId(entity.tripUpdate.trip.tripId)),
+                        route_short_name: gtfsRes.getRouteShortName(gtfsRes.getRouteId(entity.tripUpdate.trip.tripId)),
                         vehicle_id: getVehiculeId(entity.tripUpdate),
                         trip_id: entity.tripUpdate.trip.tripId,
                         trip_color: gtfsRes.getTripColor(entity.tripUpdate.trip.tripId),
@@ -351,7 +374,8 @@ async function getTripUpdateData(stopDatas) {
     });
     
     
-    const otherData = gtfsRes.getOtherTripIds(tripIds, 3600000, stopDatas);    
+    const otherData = gtfsRes.getOtherTripIds(tripIds, ENV.THEORETICAL_DEPTH, stopDatas);
+    
     for(let oD of otherData) {
         if(oD.theoretical)
             oD.vehicle_id = getVehiculeId(await getTripUpdate(oD.trip_id));
@@ -392,6 +416,10 @@ function getTripDepartureStopId(stopTimeUpdate) {
 }
 
 async function getAlerts(lines) {
+    if(lines == undefined || lines == "") {
+        return [];
+    }
+
     let alerts = await getLastAlert();
 
     if(alerts == undefined) {
@@ -405,7 +433,7 @@ async function getAlerts(lines) {
         let routeId = 0;
 
         for(let entity of alert.alert.informedEntity) {            
-            let rId = entity.routeId.substring(entity.routeId.indexOf("-") + 1, entity.routeId.length);
+            let rId = entity.routeId;
             
             if(lines.includes(rId)) {
                 conti = true;
@@ -432,8 +460,12 @@ async function getAlerts(lines) {
     return data;
 }
 
-async function getUpdate(stopName, directions, lines) {
-    return await getTripUpdateData(getStopDatas(stopName, directions, lines));
+async function getUpdate(stopName, directions) {
+    return await getTripUpdateData(getStopDatas(stopName, directions));
+}
+
+function getClientInfos() {
+    return {transport_name: ENV.CLIENT_TRANSPORT_NAME, station_name: ENV.CLIENT_STATION_NAME};
 }
 
 module.exports = {
@@ -442,5 +474,6 @@ module.exports = {
     getAllStops,
     getDirectionsAndLines,
     getVehiculeInfo,
-    getAlerts
+    getAlerts,
+    getClientInfos
 }

@@ -30,11 +30,11 @@ async function analyse(req, action, data) {
 
 function choose(req, uid, time, data) {
     let userObject = getUserObject(req, uid);
+    
     userObject.directions.push({
         time: time,
         from: data[0],
-        to: data[1],
-        with: data[2]
+        to: data[1]
     });    
 
     USERS[uid] = userObject;
