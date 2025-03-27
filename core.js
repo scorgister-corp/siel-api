@@ -465,7 +465,7 @@ async function getUpdate(stopName, directions) {
 }
 
 function getClientInfos() {
-    return {transport_name: ENV.CLIENT_TRANSPORT_NAME, station_name: ENV.CLIENT_STATION_NAME};
+    return {transport_name: ENV.CLIENT_TRANSPORT_NAME, station_name: ENV.CLIENT_STATION_NAME, assets_url: ENV.CLIENT_ASSETS_URL};
 }
 
 module.exports = {
