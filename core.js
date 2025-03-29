@@ -65,7 +65,7 @@ async function getLastAlert() {
     if(alertFeed == undefined || alertLastUpdate == undefined || new Date().getTime() - alertLastUpdate > 20 * 1000) {
         alertFeed = await getGTFSAlert();
         alertLastUpdate = new Date().getTime();
-    }    
+    }
 
     return alertFeed;
 }
@@ -189,8 +189,7 @@ async function getTripIdByVehiculeId(vehiculeId) {
  */
 function getStopDatas(stopName, directions) {
     const datas = {};
-    const routeIds = [];
-    
+            
     for(let routeId in directions)
         directions[routeId] = directions[routeId].map(function(x) {return x.toUpperCase();});
 
@@ -431,7 +430,7 @@ async function getAlerts(lines) {
     alerts.entity.forEach(alert => {      
         let conti = false;
         let routeId = 0;
-
+        
         for(let entity of alert.alert.informedEntity) {            
             let rId = entity.routeId;
             

@@ -22,6 +22,7 @@ async function analyse(req, action, data) {
         case ACTION.TRIP_INFO:
             tripInfo(req, uid, time, data);
             break;
+            
         case ACTION.VEHICULE_INFO:
             vehiculeInfo(req, uid, time, data);
             break;
