@@ -1,1 +1,4 @@
 /analytics
+/gtfs
+.env
+infos.json
