@@ -1,7 +1,7 @@
 const GtfsRealtimeBindings = require('gtfs-realtime-bindings');
-const INFOS = require('./infos.json');
 const gtfsRes = require("./gtfs-res");
 const env = require("./env");
+const fs = require("fs");
 
 var tripUpdateFeed = undefined;
 var tripLastUpdate = undefined;
@@ -13,6 +13,12 @@ var vehicleFeed = undefined;
 var vehiculeLastUpdate = undefined;
 
 const ENV = env.loadFile("./.env");
+
+if(!fs.existsSync("./infos.json")) {
+    fs.writeFileSync("./infos.json", JSON.stringify({}));
+}
+
+INFOS = JSON.parse(fs.readFileSync("./infos.json"));
 
 async function getGTFSData(url) {
     let response = null;
