@@ -249,17 +249,21 @@ async function getTripInfo(tripId) {
                 departureTime = arrivalOrDeparture.time.toString();
                 stops.push(stopName);
             }            
-            
+            let routeId = gtfsRes.getRouteId(trip.trip.tripId);
+            if(routeId == undefined || routeId == "") {
+                routeId = trip.trip.routeId;
+            }
+
             tmpData.push({
                 departure_time: departureTime,
                 station_name: stopName,
                 state: stationState,
                 vehicle_id: getVehiculeId(trip),
                 trip_id: trip.trip.tripId,
-                route_id: gtfsRes.getRouteId(trip.trip.tripId),
-                route_short_name: gtfsRes.getRouteShortName(gtfsRes.getRouteId(trip.trip.tripId)),
-                route_long_name: gtfsRes.getRouteLongName(gtfsRes.getRouteId(trip.trip.tripId)),
-                trip_color: gtfsRes.getTripColor(trip.trip.tripId),
+                route_id: routeId,
+                route_short_name: gtfsRes.getRouteShortName(routeId),
+                route_long_name: gtfsRes.getRouteLongName(routeId),
+                trip_color: gtfsRes.getTripColorByRouteId(routeId),
                 schedule_relationship: elt.scheduleRelationship,
                 direction_id: trip.trip.directionId?.toString(),
                 theoretical: false

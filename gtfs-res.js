@@ -159,6 +159,13 @@ function getTripColor(tripId) {
     return ROUTES[TRIPS[tripId].route_id].route_color;
 }
 
+function getTripColorByRouteId(routeId) {
+    if(!routeId || !ROUTES[routeId])
+        return undefined;
+    
+    return ROUTES[routeId].route_color;
+}
+
 function getTrip(tripId) {
     return TRIPS[tripId];
 }
@@ -356,5 +363,6 @@ module.exports = {
     getOtherDestinationsAndLines,
     getRouteId,
     getRouteShortName,
-    getRouteLongName
+    getRouteLongName,
+    getTripColorByRouteId
 };
