@@ -18,7 +18,7 @@ if(!fs.existsSync("./infos.json")) {
     fs.writeFileSync("./infos.json", JSON.stringify({}));
 }
 
-INFOS = JSON.parse(fs.readFileSync("./infos.json"));
+const INFOS = JSON.parse(fs.readFileSync("./infos.json"));
 
 async function getGTFSData(url) {
     let response = null;
