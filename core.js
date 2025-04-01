@@ -71,7 +71,7 @@ async function getLastAlert() {
     if(alertFeed == undefined || alertLastUpdate == undefined || new Date().getTime() - alertLastUpdate > 20 * 1000) {
         alertFeed = await getGTFSAlert();
         alertLastUpdate = new Date().getTime();
-    }
+    }    
 
     return alertFeed;
 }
@@ -119,10 +119,19 @@ async function getDirectionsAndLines(stopName) {
             continue;
 
         let destStop = entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1];
-        if(destStop == undefined)
+        let depStop = entity.tripUpdate.stopTimeUpdate[0];
+        if(destStop == undefined || depStop == undefined)
             continue;
 
-        let name = gtfsRes.getStopName(destStop.stopId);
+
+        let destName = gtfsRes.getStopName(destStop.stopId);
+        let depName = gtfsRes.getStopName(depStop.stopId);
+        
+        let name = destName;
+        if(destName == depName) {
+            name += " " +  (entity.tripUpdate.trip.directionId==0?"A":"B");
+        }
+        
         if(!Object.keys(stop).includes(name))
             stop[name] = [];
 
@@ -313,7 +322,7 @@ async function getTripInfo(tripId) {
 
 async function getTripUpdateData(stopDatas) {
     let tripUpdate = await getLastTripUpdate();
-    
+
     if(tripUpdate == undefined)
         return null;
     
@@ -332,7 +341,15 @@ async function getTripUpdateData(stopDatas) {
             if(routeId == "empty"
                 || (entity.tripUpdate.trip.routeId != undefined && routeId == entity.tripUpdate.trip.routeId)
                 || ([undefined, ""].includes(entity.tripUpdate.trip.routeId) && routeId == gtfsRes.getRouteId(entity.tripUpdate.trip.tripId))) {
-                if(stopDatas[1][routeId].includes(gtfsRes.getStopName(entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1].stopId)?.toUpperCase())) {
+                    let destName = gtfsRes.getStopName(entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1].stopId)?.toUpperCase();
+                    let depName = gtfsRes.getStopName(entity.tripUpdate.stopTimeUpdate[0].stopId)?.toUpperCase();
+                    let name = destName;
+
+                    if(depName == destName) {
+                        name += " " + (entity.tripUpdate.trip.directionId==0?"A":"B");
+                    }
+
+                if(stopDatas[1][routeId].includes(name)) {
                     ok = true;
                     break
                 }

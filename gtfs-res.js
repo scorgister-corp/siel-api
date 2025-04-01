@@ -207,18 +207,25 @@ function getOtherDestinationsAndLines(stopName, deepSec) {
                     
                     let depDestName = getStaticDepartureDestinationName(tt.trip_id);
                     if(c.getTime() >= n.getTime() && c.getTime() - n.getTime() <= deepSec * 1000) {
-                        if(!Object.keys(data).includes(depDestName[1]))
-                            data[depDestName[1]] = [];
+
+                        let name = depDestName[1];
+
+                        if(depDestName[0] == depDestName[1]) {
+                            name += " " + (tt.direction_id==0?"A":"B");
+                        }
+
+                        if(!Object.keys(data).includes(name))
+                            data[name] = [];
                         
                         let ok = true;
-                        for(let directionData of data[depDestName[1]]) {
+                        for(let directionData of data[name]) {
                             if(directionData.id == tt.route_id) {
                                 ok = false;
                                 break;
                             }
                         }
                         if(ok)
-                            data[depDestName[1]].push({id: tt.route_id, short_name: getRouteShortName(tt.route_id), long_name: getRouteLongName(tt.route_id)});
+                            data[name].push({id: tt.route_id, short_name: getRouteShortName(tt.route_id), long_name: getRouteLongName(tt.route_id)});
                     }
                 }
             }
