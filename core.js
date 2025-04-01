@@ -371,6 +371,8 @@ async function getTripUpdateData(stopDatas) {
                 let arrivalOrDeparture = stopTime.departure;
                 if(arrivalOrDeparture == undefined)
                     arrivalOrDeparture = stopTime.arrival;
+
+               
                 
                 if(arrivalOrDeparture.time.toString() - Math.floor(new Date().getTime() / 1000).toString() >= 0) { 
                     
@@ -380,15 +382,20 @@ async function getTripUpdateData(stopDatas) {
                     if(departureStopName == destinationStopName) {
                         destinationStopName += " " + (entity.tripUpdate.trip.directionId == 0?"A":"B");
                     }
+
+                    let routeId = gtfsRes.getRouteId(entity.tripUpdate.trip.tripId);
+                    if(routeId == undefined || routeId == "") {
+                        routeId = entity.tripUpdate.trip.routeId;
+                    }
                     
                     data.push({
                         trip_headsign: destinationStopName,
                         departure_time: arrivalOrDeparture.time.toString(),
-                        route_long_name: gtfsRes.getRouteShortName(gtfsRes.getRouteId(entity.tripUpdate.trip.tripId)),
-                        route_short_name: gtfsRes.getRouteShortName(gtfsRes.getRouteId(entity.tripUpdate.trip.tripId)),
+                        route_long_name: gtfsRes.getRouteShortName(routeId),
+                        route_short_name: gtfsRes.getRouteShortName(routeId),
                         vehicle_id: getVehiculeId(entity.tripUpdate),
                         trip_id: entity.tripUpdate.trip.tripId,
-                        trip_color: gtfsRes.getTripColor(entity.tripUpdate.trip.tripId),
+                        trip_color: gtfsRes.getTripColorByRouteId(routeId),
                         theoretical: false
                     });
                 }          
@@ -475,7 +482,8 @@ async function getAlerts(lines) {
         for(let t of trans) {
             if(t.language == "fr") {
                 data.push({
-                    routeId: routeId,
+                    route_id: routeId,
+                    route_short_name: gtfsRes.getRouteShortName(routeId),
                     text: t.text,
                     alert_id: alert.id
                 });
