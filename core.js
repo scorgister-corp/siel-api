@@ -453,6 +453,11 @@ async function getAlerts(lines) {
         return [];
     }
 
+    let lineNames = [];
+    for(let l of lines) {
+        lineNames.push(gtfsRes.getRouteShortName(l));
+    }
+
     let alerts = await getLastAlert();
 
     if(alerts == undefined) {
@@ -473,9 +478,15 @@ async function getAlerts(lines) {
                 routeId = rId;
                 break;
             }
+            
+            if(lineNames.includes(rId)) {
+                conti = true;
+                routeId = gtfsRes.getRouteIdByShortName(rId);
+                break;
+            }
         }
         
-        if(!conti)
+        if(!conti || routeId == undefined)
             return;
         
         let trans = alert.alert.descriptionText.translation;

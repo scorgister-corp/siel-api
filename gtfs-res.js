@@ -337,6 +337,17 @@ function getRouteId(tripId) {
     return TRIPS[tripId].route_id;
 }
 
+function getRouteIdByShortName(shortName) {
+    if(shortName == undefined) {
+        return undefined;
+    }
+
+    for(let route of Object.values(ROUTES)) {
+        if(route.route_short_name == shortName)
+            return route.route_id;
+    }
+}
+
 function getRouteShortName(routeId) {
     if(routeId == undefined || ROUTES[routeId] == undefined)
         return undefined;
@@ -371,5 +382,6 @@ module.exports = {
     getRouteId,
     getRouteShortName,
     getRouteLongName,
-    getTripColorByRouteId
+    getTripColorByRouteId,
+    getRouteIdByShortName
 };
