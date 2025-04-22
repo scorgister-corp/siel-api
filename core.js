@@ -297,7 +297,8 @@ async function getTripInfo(tripId) {
 
     }else {
         data = gtfsRes.getStaticLine(tripId);
-
+        if(data == undefined)
+            return [];
         for(let d of data)
             if(d.theoretical)
                 d.vehicle_id = getVehiculeId(await getTripUpdate(d.trip_id));
