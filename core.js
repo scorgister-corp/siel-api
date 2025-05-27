@@ -330,6 +330,7 @@ async function getTripUpdateData(stopDatas) {
     let data = [];
     
     let tripIds = [];
+    
     tripUpdate.entity.forEach(entity => {
     
         if(entity.tripUpdate.trip.scheduleRelationship == 3 || entity.tripUpdate.stopTimeUpdate.length == 0) {
@@ -388,6 +389,11 @@ async function getTripUpdateData(stopDatas) {
                     if(routeId == undefined || routeId == "") {
                         routeId = entity.tripUpdate.trip.routeId;
                     }
+                    
+                    /*if(tripIds.includes(entity.tripUpdate.trip.tripId)) {
+                        
+                        return;
+                    }*/
                     
                     data.push({
                         trip_headsign: destinationStopName,
