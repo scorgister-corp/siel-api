@@ -4,7 +4,7 @@ const analytics = require('./analytics');
 
 const core = require('./core.js');
 
-const VERSION = "1.3.0"
+const VERSION = "1.3.1"
 
 
 const app = express();
@@ -36,7 +36,7 @@ handlers.get("/trip", (req, res) => {
         send400(res);
         return;
     }
-
+    
     core.getTripInfo(req.query["tripid"]).then(e => {
         analytics.analyse(req, analytics.ACTION.TRIP_INFO, e);
         send(res, e);

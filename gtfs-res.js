@@ -285,6 +285,7 @@ function getOtherTripIds(exculdeIds, deepSec, stopDatas) {
                         vehicle_id: null,
                         trip_id: tt.trip_id,
                         trip_color: getTripColor(tt.trip_id),
+                        modified: false,
                         theoretical: true
                     });
                 }

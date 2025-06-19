@@ -98,35 +98,46 @@ async function getDirectionsAndLines(stopName) {
 	let stop = {};
     let trip = await getLastTripUpdate();
     stop = gtfsRes.getOtherDestinationsAndLines(stopName, ENV.THEORETICAL_DEPTH);
-
+    
     if(trip == undefined) {
         return {};
     }
     
     let stopIds = gtfsRes.getStopIds(stopName);
     
+    let date = new Date();
+
     for(let entity of trip.entity) {
         let ok = false;
         
         for(let st of entity.tripUpdate.stopTimeUpdate) {
             if(stopIds.includes(st.stopId)) {
-                ok = true;
-                break;
+                let arrivalOrDeparture = st.departure;
+                if(arrivalOrDeparture == undefined)
+                    arrivalOrDeparture = st.arrival;    
+                
+                if(arrivalOrDeparture != undefined && arrivalOrDeparture.time >= date.getTime()) {
+                    ok = true;
+                    break;
+                }
+
             }
         }
 
         if(!ok)
             continue;
-
+        
         let destStop = entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1];
         let depStop = entity.tripUpdate.stopTimeUpdate[0];
+        
         if(destStop == undefined || depStop == undefined)
             continue;
 
 
         let destName = gtfsRes.getStopName(destStop.stopId);
         let depName = gtfsRes.getStopName(depStop.stopId);
-        
+                
+
         let name = destName;
         if(destName == depName) {
             name += " " +  (entity.tripUpdate.trip.directionId==0?"A":"B");
@@ -177,6 +188,9 @@ async function getTripUpdate(tripId) {
     }
     
     for(let i = 0; i < tripUpdate.entity.length; i++) {
+        if(tripUpdate.entity[i].tripUpdate.trip.tripId == "1582398376-24")
+            console.log(tripUpdate.entity[i].tripUpdate.trip.scheduleRelationship);
+        
 		let entity = tripUpdate.entity[i];        
 		if(entity.tripUpdate.trip.tripId && entity.tripUpdate.trip.tripId == tripId) {
 			return entity.tripUpdate;
@@ -223,7 +237,7 @@ async function isTheoreticalTrip(tripId) {
 function isTheorical(trip, tripId) {
     if(trip == undefined || trip.stopTimeUpdate.length == 0)
         return true;
-    
+
     let stopName = gtfsRes.getStopName(trip.stopTimeUpdate[trip.stopTimeUpdate.length-1].stopId);
     return trip.stopTimeUpdate.length <= 1 || (gtfsRes.getStaticDepartureDestinationName(tripId) != undefined && stopName !== undefined && stopName.toUpperCase() != gtfsRes.getStaticDepartureDestinationName(tripId)[1].toUpperCase());
 }
@@ -239,13 +253,20 @@ async function getTripInfo(tripId) {
             return null;
 
         let tmpData = [];
-        
-        trip.stopTimeUpdate.forEach(elt => {
+
+        for(let i = 0; i < trip.stopTimeUpdate.length; i++) {
+            let elt = trip.stopTimeUpdate[i];
+
             var stopName = gtfsRes.getStopName(elt.stopId);
             
             if(stopName == undefined) {
-                return;
+                continue;
             }
+
+            if(i < trip.stopTimeUpdate.length - 1 && trip.stopTimeUpdate[i+1].stopId == elt.stopId) {
+                continue;
+            }
+
  
             let stationState = -1;
             let departureTime = "0";
@@ -284,7 +305,7 @@ async function getTripInfo(tripId) {
                 theoretical: false
             });
          
-        });
+        }
                 
         for(let d of tmpData) {
             if(d.schedule_relationship != 0 && stops.includes(d.station_name)) {
@@ -346,15 +367,15 @@ async function getTripUpdateData(stopDatas) {
                     let destName = gtfsRes.getStopName(entity.tripUpdate.stopTimeUpdate[entity.tripUpdate.stopTimeUpdate.length-1].stopId)?.toUpperCase();
                     let depName = gtfsRes.getStopName(entity.tripUpdate.stopTimeUpdate[0].stopId)?.toUpperCase();
                     let name = destName;
-
+                    
                     if(depName == destName) {
                         name += " " + (entity.tripUpdate.trip.directionId==0?"A":"B");
                     }
 
-                if(stopDatas[1][routeId].includes(name)) {
-                    ok = true;
-                    break
-                }
+                    if(stopDatas[1][routeId].includes(name)) {
+                        ok = true;
+                        break
+                    }
             }
         }
 
@@ -364,17 +385,21 @@ async function getTripUpdateData(stopDatas) {
         if(isTheorical(entity.tripUpdate, entity.tripUpdate.trip.tripId)) {
             return;
         }
-    
-        entity.tripUpdate.stopTimeUpdate.forEach(stopTime => {
+        
+        for(let i = 0; i < entity.tripUpdate.stopTimeUpdate.length; i++) {
+            let stopTime = entity.tripUpdate.stopTimeUpdate[i];
+
             // The vehicle is proceeding in accordance with its static schedule of stops, although not necessarily according to the times of the schedule. 
             if(stopTime.scheduleRelationship == 0
                 && stopDatas[0][stopTime.stopId] != undefined) {
-                
+                    
+                if(i < entity.tripUpdate.stopTimeUpdate.length - 1 && entity.tripUpdate.stopTimeUpdate[i+1].stopId == stopTime.stopId) {
+                    continue;
+                }
+
                 let arrivalOrDeparture = stopTime.departure;
                 if(arrivalOrDeparture == undefined)
                     arrivalOrDeparture = stopTime.arrival;
-
-               
                 
                 if(arrivalOrDeparture.time.toString() - Math.floor(new Date().getTime() / 1000).toString() >= 0) { 
                     
@@ -394,6 +419,15 @@ async function getTripUpdateData(stopDatas) {
                         
                         return;
                     }*/
+
+                    let modified = false;
+
+                    for(let i = 0; i < entity.tripUpdate.stopTimeUpdate.length; i++) {
+                        if(entity.tripUpdate.stopTimeUpdate[i].scheduleRelationship != 0) {
+                            modified = true;
+                            break;
+                        }
+                    }
                     
                     data.push({
                         trip_headsign: destinationStopName,
@@ -403,14 +437,14 @@ async function getTripUpdateData(stopDatas) {
                         vehicle_id: getVehiculeId(entity.tripUpdate),
                         trip_id: entity.tripUpdate.trip.tripId,
                         trip_color: gtfsRes.getTripColorByRouteId(routeId),
+                        modified: modified,
                         theoretical: false
                     });
                 }          
             }
             tripIds.push(entity.tripUpdate.trip.tripId);      
             
-        });
-        
+        }
     });
     
     
