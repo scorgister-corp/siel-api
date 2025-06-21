@@ -268,7 +268,7 @@ function getOtherTripIds(exculdeIds, deepSec, stopDatas) {
                 
                 if(!ok)
                    continue;
-               
+                    
                 if(depDestName[0].toUpperCase() == depDestName[1].toUpperCase()) {
                     depDestName[1] += " " + (TRIPS[tt.trip_id].direction_id == 0?"A":"B");
                 }

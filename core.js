@@ -445,8 +445,7 @@ async function getTripUpdateData(stopDatas) {
             tripIds.push(entity.tripUpdate.trip.tripId);      
             
         }
-    });
-    
+    });    
     
     const otherData = gtfsRes.getOtherTripIds(tripIds, ENV.THEORETICAL_DEPTH, stopDatas);
     
