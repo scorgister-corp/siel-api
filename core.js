@@ -553,6 +553,8 @@ function getClientInfos() {
     return {transport_name: ENV.CLIENT_TRANSPORT_NAME, station_name: ENV.CLIENT_STATION_NAME, assets_url: ENV.CLIENT_ASSETS_URL};
 }
 
+getStationsInfo = gtfsRes.getStationsInfo
+
 module.exports = {
     getUpdate,
     getTripInfo,
@@ -560,5 +562,6 @@ module.exports = {
     getDirectionsAndLines,
     getVehiculeInfo,
     getAlerts,
-    getClientInfos
+    getClientInfos,
+    getStationsInfo
 }

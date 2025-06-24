@@ -4,7 +4,7 @@ const analytics = require('./analytics');
 
 const core = require('./core.js');
 
-const VERSION = "1.3.1"
+const VERSION = "1.4.0"
 
 
 const app = express();
@@ -14,6 +14,10 @@ const handlers = handler(app, defaultMethodNotAllowedHandler);
 
 app.options("*", (req, res) => {    
     send(res, {});
+});
+
+handlers.get("/station/info", (req, res) => {
+   send(res, core.getStationsInfo())
 });
 
 handlers.post("/info", (req, res) => {    

@@ -363,6 +363,20 @@ function getRouteLongName(routeId) {
     return ROUTES[routeId].route_long_name;
 }
 
+function getStationsInfo() {
+    let infos = []
+    for(let stopId in STOPS) {
+        infos.push({
+            id: STOPS[stopId].stop_id,
+            name: STOPS[stopId].stop_name,
+            lat: STOPS[stopId].stop_lat,
+            lon: STOPS[stopId].stop_lon
+        })
+    }
+
+    return infos;
+}
+
 module.exports = {
     getTodayServices,
     getTodayTrips,
@@ -384,5 +398,6 @@ module.exports = {
     getRouteShortName,
     getRouteLongName,
     getTripColorByRouteId,
-    getRouteIdByShortName
+    getRouteIdByShortName,
+    getStationsInfo
 };
