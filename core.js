@@ -66,10 +66,10 @@ async function getLastTripUpdate() {
     
     return tripUpdateFeed;
 }
-
 async function getLastAlert() {
     if(alertFeed == undefined || alertLastUpdate == undefined || new Date().getTime() - alertLastUpdate > 20 * 1000) {
         alertFeed = await getGTFSAlert();
+        
         alertLastUpdate = new Date().getTime();
     }    
 
@@ -78,7 +78,7 @@ async function getLastAlert() {
 
 async function getLastVehiculePosition() {
     if(vehicleFeed == undefined || vehiculeLastUpdate == undefined || new Date().getTime() - vehiculeLastUpdate > 20 * 1000) {
-        vehicleFeed = await getGTFSAlert();
+        vehicleFeed = await getGTFSVehiculePosition();
         vehiculeLastUpdate = new Date().getTime();
     }
 
