@@ -564,7 +564,7 @@ async function getNearby(stopIds) {
                     return;
                 
                 const entityTime = stopTime.arrival.time.low * 1000
-                if((entityTime - currentTime)/1000 < 30 && (entityTime - currentTime)/1000 > -60) {
+                if((entityTime - currentTime)/1000 < 120 && (entityTime - currentTime)/1000 > -150) {
                     tripIds.push({
                         delta: (entityTime - currentTime)/1000,
                         tripId: entity.tripUpdate.trip.tripId,
