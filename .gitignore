@@ -2,3 +2,4 @@
 /gtfs
 .env
 infos.json
+/.env_folder

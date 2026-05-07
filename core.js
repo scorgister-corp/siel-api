@@ -553,6 +553,32 @@ function getClientInfos() {
     return {transport_name: ENV.CLIENT_TRANSPORT_NAME, station_name: ENV.CLIENT_STATION_NAME, assets_url: ENV.CLIENT_ASSETS_URL};
 }
 
+async function getNearby(stopIds) {    
+    let tripIds = [];
+    let tripUpdate = await getLastTripUpdate();
+    tripUpdate.entity.forEach(entity => {
+        entity.tripUpdate.stopTimeUpdate.forEach(stopTime => {
+            if(stopIds.includes(stopTime.stopId)) {
+                const currentTime = new Date().getTime();
+                if(stopTime.arrival == undefined)
+                    return;
+                
+                const entityTime = stopTime.arrival.time.low * 1000
+                if((entityTime - currentTime)/1000 < 30 && (entityTime - currentTime)/1000 > -60) {
+                    tripIds.push({
+                        delta: (entityTime - currentTime)/1000,
+                        tripId: entity.tripUpdate.trip.tripId,
+                        vehicleId: entity.tripUpdate.vehicle?.id | undefined
+                    });
+                    
+                }
+            }
+        });
+    });
+
+    return tripIds;
+}
+
 getStationsInfo = gtfsRes.getStationsInfo
 
 module.exports = {
@@ -563,5 +589,6 @@ module.exports = {
     getVehiculeInfo,
     getAlerts,
     getClientInfos,
-    getStationsInfo
+    getStationsInfo,
+    getNearby
 }

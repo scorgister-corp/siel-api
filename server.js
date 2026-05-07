@@ -4,7 +4,7 @@ const analytics = require('./analytics');
 
 const core = require('./core.js');
 
-const VERSION = "1.4.0"
+const VERSION = "1.5.0"
 
 
 const app = express();
@@ -14,6 +14,19 @@ const handlers = handler(app, defaultMethodNotAllowedHandler);
 
 app.options("*", (req, res) => {    
     send(res, {});
+});
+
+handlers.post("/api/v1/external/nearby", (req, res) => {
+    if(req.body["ids"] == undefined) {
+        send400(res);
+        return;
+    }
+
+    let ids = req.body["ids"];
+
+    core.getNearby(ids).then(data => {
+        send(res, data);
+    });
 });
 
 handlers.get("/station/info", (req, res) => {
