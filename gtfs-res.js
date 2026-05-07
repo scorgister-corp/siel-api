@@ -399,5 +399,6 @@ module.exports = {
     getRouteLongName,
     getTripColorByRouteId,
     getRouteIdByShortName,
-    getStationsInfo
+    getStationsInfo,
+    createDate
 };

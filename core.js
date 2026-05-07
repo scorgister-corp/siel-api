@@ -553,10 +553,18 @@ function getClientInfos() {
     return {transport_name: ENV.CLIENT_TRANSPORT_NAME, station_name: ENV.CLIENT_STATION_NAME, assets_url: ENV.CLIENT_ASSETS_URL};
 }
 
-async function getNearby(stopIds) {    
-    let tripIds = [];
+const nearbyMinRange = 120
+const nearbyMaxRange = -150
+
+async function getNearby(stopIds) {
+    let allTrips = []
+    let trips = [];
     let tripUpdate = await getLastTripUpdate();
+
+    const currentTime = new Date().getTime();
+
     tripUpdate.entity.forEach(entity => {
+        allTrips.push(entity.tripUpdate.trip.tripId)        
         entity.tripUpdate.stopTimeUpdate.forEach(stopTime => {
             if(stopIds.includes(stopTime.stopId)) {
                 const currentTime = new Date().getTime();
@@ -564,8 +572,8 @@ async function getNearby(stopIds) {
                     return;
                 
                 const entityTime = stopTime.arrival.time.low * 1000
-                if((entityTime - currentTime)/1000 < 120 && (entityTime - currentTime)/1000 > -150) {
-                    tripIds.push({
+                if((entityTime - currentTime)/1000 < nearbyMinRange && (entityTime - currentTime)/1000 > nearbyMaxRange) {
+                    trips.push({
                         delta: (entityTime - currentTime)/1000,
                         tripId: entity.tripUpdate.trip.tripId,
                         vehicleId: entity.tripUpdate.vehicle?.id | undefined
@@ -574,9 +582,30 @@ async function getNearby(stopIds) {
                 }
             }
         });
-    });
+    });    
 
-    return tripIds;
+    for(trip of gtfsRes.getTodayTrips()) {
+        for(stopId of stopIds) {
+            let time = gtfsRes.getTripStopTime(trip.trip_id, stopId)
+            if(time != undefined) {
+                let h = time.split(":")[0], m = time.split(":")[1], s = time.split(":")[2];
+                let date = gtfsRes.createDate(h, m, s);
+                if((date - currentTime)/1000 < nearbyMinRange && (date - currentTime)/1000 > nearbyMaxRange) {
+                    let ok = true
+                    if(!allTrips.includes(trip.trip_id))
+                        trips.push({
+                                delta: (date - currentTime)/1000,
+                                tripId: trip.trip_id,
+                                vehicleId: 0
+                            })
+                        
+                }
+                break;
+            }
+        }
+    }
+
+    return trips;
 }
 
 getStationsInfo = gtfsRes.getStationsInfo
